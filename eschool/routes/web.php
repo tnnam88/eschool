@@ -24,6 +24,10 @@ Route::get('/quiz', 'QuizController@index')->name('quiz');
 Route::get('/quiz/result','QuizController@result');
 
 /* Do test */
-Route::get('/dotest', 'TestController@testform');
+Route::get('/dotest', 'TestController@testform')->middleware('auth');
 Route::get('/test', 'TestController@test');
 Route::get('/result', 'TestController@result');
+
+/* Teacher add question */
+Route::get('/add_question_form','TestController@addQuestionForm');
+Route::post('/add_question','TestController@addQuestion');

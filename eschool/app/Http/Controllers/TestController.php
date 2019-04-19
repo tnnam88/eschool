@@ -51,14 +51,61 @@ class TestController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Show the form for creating a new question.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function addQuestionForm()
+    {
+        $levels = DB::table('levels')->get();
+        $subjects = DB::table('subjects')->get();
+        return view('addQuestionForm',['levels'=>$levels,'subjects'=>$subjects]);
+    }
+
+    /**
+ * Store a newly created resource in storage.
+ *
+ * @param  \Illuminate\Http\Request  $request
+ * @return \Illuminate\Http\Response
+ */
+    public function store(Request $request)
+    {
+
+    }
+
+    /**
+     * Store a newly created question in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function addQuestion(Request $request)
     {
-        //
+        $user_id = Auth::user()->id;
+        $level_id = $request->input('testlvl_id');
+        $subject_id = $request->input('testsubject_id');
+        $question = $request->input('question');
+        $answer1 = $request->input('answer1');
+        $answer2 = $request->input('answer2');
+        $answer3 = $request->input('answer3');
+        $answer = $request->input('answer');
+
+        $question_id = DB::table('questions')->insertGetId(
+            ['user_id'=>$user_id,'subject_id' => $subject_id, 'level_id' => $level_id, 'content' => $question]
+        );
+        DB::table('answers')->insert(
+            ['question_id' => $question_id, 'content' => $answer1, 'is_correct' => 0]
+        );
+        DB::table('answers')->insert(
+            ['question_id' => $question_id, 'content' => $answer2, 'is_correct' => 0]
+        );
+        DB::table('answers')->insert(
+            ['question_id' => $question_id, 'content' => $answer3, 'is_correct' => 0]
+        );
+        DB::table('answers')->insert(
+            ['question_id' => $question_id, 'content' => $answer, 'is_correct' => 1]
+        );
+        return view('addQuestionResult');
     }
 
     /**
