@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Comment;
+use Illuminate\Support\Facades\Auth;
 use App\Post;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\File;
-
-class PostController extends Controller
+use App\Like;
+use Illuminate\Support\Facades\Session;
+class CommentController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +17,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::all();
-        return view('posts.index', compact('posts'));
+        //
     }
 
     /**
@@ -27,7 +27,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('posts.create');
+        //
     }
 
     /**
@@ -38,28 +38,13 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate(request(), [
-            'title' => 'required',
-            'content' => 'required'
-        ]);
-        $post = new Post;
-        $post->title = $request->title;
-        $post->content = $request->content;
-        $post->user_id = \Auth::user()->id;
+        $comment = new Comment;
+        $comment->content = $request->get('content');
+        $comment->user_id = Auth::user()->id;
+        $post = Post::find($request->get('post_id'));
+        $post->comment()->save($comment);
 
-// Store photo of a post
-        $photo = $request->file('photo');
-        $extension = $photo->getClientOriginalExtension();
-        Storage::disk('public')->put($photo->getFilename().'.'.$extension,  File::get($photo));
-
-
-        $post->mime = $photo->getClientMimeType();
-        $post->original_filename = $photo->getClientOriginalName();
-        $post->filename = $photo->getFilename().'.'.$extension;
-
-        $post->save();
-
-        return back()->with('success', 'Post has been added');
+        return back()->with('success', 'Comment has been added'); //Session
     }
 
     /**
@@ -70,11 +55,7 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        $post = Post::find($id);
-        $comments = $post->comment;
-
-
-        return view('posts.show', compact('post', 'comments'));
+        //
     }
 
     /**
@@ -110,4 +91,31 @@ class PostController extends Controller
     {
         //
     }
+
+
+    /**
+     * Add like in storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function like(Request $request)
+    {
+        $like = new Like;
+        $like->comment_id = $request->comment_id;
+        $like->user_id = Auth::user()->id;
+        $liked = Like::where('comment_id', '=', $like->comment_id)->where('user_id', '=', $like->user_id)->count();
+
+        if ($liked == 0)
+        {
+            $like->save();
+            Session::flash('msg_cmt_added', 'You have liked a comment');
+            return back(); //Session
+        } else {
+            Session::flash('msg_cmt_not_added', 'You already liked this comment');
+            return back(); //Session
+        }
+
+    }
+
 }

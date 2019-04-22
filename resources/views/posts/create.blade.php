@@ -24,7 +24,7 @@
             <p>{{ \Session::get('success') }}</p>
         </div><br />
     @endif
-    <form method="POST" action="{{url('posts')}}">
+    <form method="POST" action="{{url('posts')}}" enctype="multipart/form-data">
         {{csrf_field()}}
         <div class="row">
             <div class="col-md-4"></div>
@@ -38,6 +38,14 @@
             <div class="form-group col-md-4">
                 <label for="content">Post Content:</label>
                 <input type="text" class="form-control" name="content">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="form-group col-md-4">
+                <label for="content">Upload Photo:</label>
+                <input type="file" class="form-control" name="photo">
             </div>
         </div>
 

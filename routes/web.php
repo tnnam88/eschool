@@ -20,3 +20,8 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('posts', 'PostController');
+
+Route::get('/posts/show/{id}', 'PostController@show')->name('posts.show');
+
+Route::post('/comment/store', 'CommentController@store')->name('comment.add');
+Route::post('/comment/like', 'CommentController@like')->name('comment.like');
