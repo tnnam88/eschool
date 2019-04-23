@@ -19,6 +19,7 @@ class CreateTestHistoriesTable extends Migration
             $table->unsignedInteger('subject_id');
             $table->unsignedInteger('level_id');
             $table->float('result');
+            $table->string('timetest');
             $table->timestamps();
         });
     }

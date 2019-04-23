@@ -71,6 +71,7 @@ use Illuminate\Support\Facades\DB;
         </script>
     </head>
     <body>
+
         <div class="flex-center position-ref full-height">
             @if (Route::has('login'))
                 <div class="top-right links">
@@ -95,6 +96,7 @@ use Illuminate\Support\Facades\DB;
                     <?php
 
                         echo "<p>your result: $p%</p>";
+                        echo "<p>Your time test : $timetest</p>";
                     ?>
                 </div>
 

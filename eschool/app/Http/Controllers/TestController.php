@@ -118,6 +118,7 @@ class TestController extends Controller
     {
         $level_id = $request->input('level_id');
         $subject_id = $request->input('subject_id');
+        $timetest = $request->input('timetest');
         $user_id = Auth::id();
         $results = $request->all();
         $p = 0;
@@ -127,7 +128,7 @@ class TestController extends Controller
         else {
             foreach ($results as $k => $v) {
                 $answer = DB::table('answers')->where('id', $v)->first();
-                if ($k == 'starttime'|| $k =='subject' || $k =='level'){
+                if ($k == 'starttime'|| $k =='subject_id' || $k =='level_id'|| $k =="timetest"){
                     continue;
                 }
 
@@ -138,12 +139,12 @@ class TestController extends Controller
                 $p += $answer->is_correct;
             }
         }
-        $p = ($p*100)/3;
+        $p = $p*100/3;
         DB::table('test_histories')->insert(
-            ['user_id'=>$user_id,'subject_id'=>$subject_id,'level_id'=>$level_id,'result'=>$p]
+            ['user_id'=>$user_id,'subject_id'=>$subject_id,'level_id'=>$level_id,'result'=>$p,'timetest'=>$timetest]
         );
 
-        return view('result',['p'=>$p]);
+        return view('result',['p'=>$p,'timetest'=>$timetest]);
     }
 
     /**
