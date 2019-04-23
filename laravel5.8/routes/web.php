@@ -25,4 +25,33 @@ Route::get('/changePassword','HomeController@showChangePasswordForm')->name('sho
 Route::post('/changePassword','HomeController@changePassword')->name('changePassword');
 
 
+Route::get('create','ImageController@create');
+Route::post('create','ImageController@store');
+
+
+Route::get('profile/user_image', 'UserController@index');
+Route::post('save', 'UserController@save');
+
+//quiz
+    //Route::get('/quiz', 'QuizController@index')->name('quiz');
+    //Route::get('/quiz/result','QuizController@result');
+
+/* Do test */
+Route::get('/dotest', 'TestController@testform');
+Route::get('/test', 'TestController@test');
+Route::get('/result', 'TestController@result');
+
+//User Profile
+Route::get('/showprofile', 'ShowProfileController@index')->name('showprofile');
+Route::post('/showprofile', 'ShowProfileController@index');
+
+
+Route::get('/editprofile', 'EditProfileController@index')->name('editprofile');
+Route::post('/editprofile', 'EditProfileController@store');
+
+//route graph
+Route::post('/showmark', 'ShowProfileController@showmark')->name('showmark');
+Route::get('/showmark', 'ShowProfileController@showmark')->name('showmark');
+
+
 
