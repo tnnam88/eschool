@@ -16,7 +16,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::all();
+        $posts = Post::latest()->take(2)->get();
         return view('posts.index', compact('posts'));
     }
 
@@ -48,15 +48,16 @@ class PostController extends Controller
         $post->user_id = \Auth::user()->id;
 
 // Store photo of a post
-        $photo = $request->file('photo');
-        $extension = $photo->getClientOriginalExtension();
-        Storage::disk('public')->put($photo->getFilename().'.'.$extension,  File::get($photo));
+        if ($request->file('photo') != NULL) {
+            $photo = $request->file('photo');
+            $extension = $photo->getClientOriginalExtension();
+            Storage::disk('public')->put($photo->getFilename() . '.' . $extension, File::get($photo));
 
 
-        $post->mime = $photo->getClientMimeType();
-        $post->original_filename = $photo->getClientOriginalName();
-        $post->filename = $photo->getFilename().'.'.$extension;
-
+            $post->mime = $photo->getClientMimeType();
+            $post->original_filename = $photo->getClientOriginalName();
+            $post->filename = $photo->getFilename() . '.' . $extension;
+        }
         $post->save();
 
         return back()->with('success', 'Post has been added');

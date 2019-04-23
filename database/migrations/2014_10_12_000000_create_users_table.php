@@ -20,6 +20,12 @@ class CreateUsersTable extends Migration
 //            $table->timestamp('email_verified_at')->nullable();
 //            $table->string('password');
 //            $table->string('role')->default('guest');
+//            $table->string('city')->nullable();
+//            $table->string('subject')->nullable();
+//            $table->string('filename')->nullable();
+//            $table->string('mime')->nullable();
+//            $table->string('original_filename')->nullable();
+//            $table->smallInteger('level')->nullable();
 //            $table->rememberToken();
 //            $table->timestamps();
 //        });
