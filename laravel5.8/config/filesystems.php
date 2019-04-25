@@ -50,7 +50,14 @@ return [
 
         'public' => [
             'driver' => 'local',
-            'root'   => public_path() . '/image',
+            'root'   => public_path() . '/avatars',
+            'url' => env('APP_URL').'/public',
+            'visibility' => 'public',
+        ],
+
+        'public_avatars' => [
+            'driver' => 'local',
+            'root'   => public_path() . '/avatars',
             'url' => env('APP_URL').'/public',
             'visibility' => 'public',
         ],

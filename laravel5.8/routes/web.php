@@ -29,7 +29,7 @@ Route::get('create','ImageController@create');
 Route::post('create','ImageController@store');
 
 
-Route::get('profile/user_image', 'UserController@index');
+Route::get('profiles/user_image', 'UserController@index');
 Route::post('save', 'UserController@save');
 
 //quiz
@@ -42,12 +42,19 @@ Route::get('/test', 'TestController@test');
 Route::get('/result', 'TestController@result');
 
 //User Profile
-Route::get('/showprofile', 'ShowProfileController@index')->name('showprofile');
-Route::post('/showprofile', 'ShowProfileController@index');
+//Route::get('/showprofile', 'ShowProfileController@index')->name('showprofile');
+//
+//
+//
+//Route::get('/editprofile', 'EditProfileController@index')->name('editprofile');
+//Route::post('/editprofile', 'EditProfileController@store');
 
+//user profiles v2
+Route::get('/showprofile', 'ShowProfileController@index')->name('profiles.show');
+Route::post('/showprofile', 'ShowProfileController@index')->name('profiles.show');
 
-Route::get('/editprofile', 'EditProfileController@index')->name('editprofile');
-Route::post('/editprofile', 'EditProfileController@store');
+Route::get('/editprofile', 'EditProfileController@index')->name('profiles.edit');
+Route::post('/editprofile', 'EditProfileController@store')->name('profiles.store');
 
 //route graph
 Route::post('/showmark', 'ShowProfileController@showmark')->name('showmark');

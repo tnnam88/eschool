@@ -32,7 +32,7 @@ class UserController extends Controller
         }
         $check = Image::insertGetId($insert);
 
-        return Redirect::to("profile/user_image")
+        return Redirect::to("profiles/user_image")
             ->withSuccess('Great! Image has been successfully uploaded.');
 
     }
