@@ -85,36 +85,22 @@ welcome.blade.php<!doctype html>
                 </div>
 
                 <div class="links">
-                    <form class="" action="/add_question" method="post">
-                        {{ csrf_field() }}
-                        <h1>Select Your Free Option</h1>
-                        <p>Select class</p>
-                        <select class="" name="testlvl_id">
-                            <?php
-                            foreach($levels as $level) {
-                                echo "<option value='$level->id'>$level->id/12</option>";
-                            }
-                            ?>
-                        </select>
-                        <br/>
-                        <p>Select subject</p>
-                        <select class="" name="testsubject_id">
-                            <?php
-                            foreach($subjects as $subject) {
-                                echo "<option value='$subject->id'>$subject->name</option>";
-                            }
-                            ?>
-                        </select>
-                        <br/>
-                        <p>Input Question</p>
-                        <input type="text" name="question">
-                        <p>Input false answer</p>
-                        <input type="text" name="answer1">
-                        <input type="text" name="answer2">
-                        <input type="text" name="answer3">
-                        <p>Input true answer</p>
-                        <input type="text" name="answer">
-                        <p><button class="">Add Question</button></p>
+                    <a href="https://laravel.com/docs">Docs</a>
+                    <a href="https://laracasts.com">Laracasts</a>
+                    <a href="https://laravel-news.com">News</a>
+                    <a href="https://blog.laravel.com">Blog</a>
+                    <a href="https://nova.laravel.com">Nova</a>
+                    <a href="https://forge.laravel.com">Forge</a>
+                    <a href="https://github.com/laravel/laravel">GitHub</a>
+                    <a href="/quiz">Quiz</a>
+                    <a href="/dotest">Do Test</a>
+                    <a href="/posts">Do Test</a>
+
+                    <form method="post" action="/posts" >
+                                                @csrf
+                            <input rows="1" placeholder="Title" name="title"></input>
+                    <input rows="2" placeholder="Write something" name="content"></input>
+                    <button>sadfsdf</button>
                     </form>
                 </div>
             </div>

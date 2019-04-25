@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAnsquizzesTable extends Migration
+class CreateLikesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateAnsquizzesTable extends Migration
      */
     public function up()
     {
-        Schema::create('ansquizzes', function (Blueprint $table) {
+        Schema::create('likes', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedInteger('user_id');
-            $table->string('answer');
-            $table->boolean('is_true');
+            $table->Integer('user_id');
+            $table->Integer('comment_id');
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ class CreateAnsquizzesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ansquizzes');
+        Schema::dropIfExists('likes');
     }
 }

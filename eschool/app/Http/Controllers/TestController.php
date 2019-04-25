@@ -19,7 +19,7 @@ class TestController extends Controller
     {
         $levels = DB::table('levels')->get();
         $subjects = DB::table('subjects')->get();
-        return view('testform',['levels'=>$levels,'subjects'=>$subjects]);
+        return view('tests.testform',['levels'=>$levels,'subjects'=>$subjects]);
     }
 
     /**
@@ -37,7 +37,7 @@ class TestController extends Controller
             ->inRandomOrder()
             ->limit(3)
             ->get();
-        return view('test',['questions'=>$questions,'level_id'=>$level_id,'subject_id'=>$subject_id]);
+        return view('tests.test',['questions'=>$questions,'level_id'=>$level_id,'subject_id'=>$subject_id]);
     }
 
     /**
@@ -59,7 +59,7 @@ class TestController extends Controller
     {
         $levels = DB::table('levels')->get();
         $subjects = DB::table('subjects')->get();
-        return view('addQuestionForm',['levels'=>$levels,'subjects'=>$subjects]);
+        return view('tests.addQuestionForm',['levels'=>$levels,'subjects'=>$subjects]);
     }
 
     /**
@@ -105,7 +105,7 @@ class TestController extends Controller
         DB::table('answers')->insert(
             ['question_id' => $question_id, 'content' => $answer, 'is_correct' => 1]
         );
-        return view('addQuestionResult');
+        return view('tests.addQuestionResult');
     }
 
     /**
@@ -140,11 +140,11 @@ class TestController extends Controller
             }
         }
         $p = $p*100/3;
-        DB::table('test_histories')->insert(
+        DB::table('results')->insert(
             ['user_id'=>$user_id,'subject_id'=>$subject_id,'level_id'=>$level_id,'result'=>$p,'timetest'=>$timetest]
         );
 
-        return view('result',['p'=>$p,'timetest'=>$timetest]);
+        return view('tests.result',['p'=>$p,'timetest'=>$timetest]);
     }
 
     /**

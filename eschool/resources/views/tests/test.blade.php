@@ -592,66 +592,19 @@ use Illuminate\Support\Facades\DB;
         <div class="gap gray-bg">
             <div class="container-fluid">
                 <div class="row" id="page-contents">
-                    <div class="col-lg-3">
-                        <aside class="sidebar static">
-                            <div class="widget">
-                                <h4 class="widget-title">Socials</h4>
-                                <ul class="socials">
-                                    <li class="facebook">
-                                        <a title="" href="#"><i class="fa fa-facebook"></i> <span>facebook</span> <ins>45 likes</ins></a>
-                                    </li>
-                                    <li class="twitter">
-                                        <a title="" href="#"><i class="fa fa-twitter"></i> <span>twitter</span><ins>25 likes</ins></a>
-                                    </li>
-                                    <li class="google">
-                                        <a title="" href="#"><i class="fa fa-google"></i> <span>google</span><ins>35 likes</ins></a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="widget stick-widget">
-                                <h4 class="widget-title">Shortcuts</h4>
-                                <ul class="naves">
-                                    <li>
-                                        <i class="ti-clipboard"></i>
-                                        <a href="newsfeed.html" title="">News feed</a>
-                                    </li>
-                                    <li>
-                                        <i class="ti-mouse-alt"></i>
-                                        <a href="inbox.html" title="">Inbox</a>
-                                    </li>
-                                    <li>
-                                        <i class="ti-files"></i>
-                                        <a href="fav-page.html" title="">My pages</a>
-                                    </li>
-                                    <li>
-                                        <i class="ti-user"></i>
-                                        <a href="timeline-friends.html" title="">friends</a>
-                                    </li>
-                                    <li>
-                                        <i class="ti-image"></i>
-                                        <a href="timeline-photos.html" title="">images</a>
-                                    </li>
-                                    <li>
-                                        <i class="ti-video-camera"></i>
-                                        <a href="timeline-videos.html" title="">videos</a>
-                                    </li>
-
-                                </ul>
-                            </div><!-- Shortcuts -->
-                        </aside>
-                    </div>
+                   @include('layouts.lsidebar')
                     <div class="col-lg-9">
                         <div class="faq-area">
                             <h2>EZ</h2>
                             <div class="accordion" id="accordion">
-                                <form role="form" id="quizform" name="quizform" action='/result' method='get'>
+                                <form role="form" id="quizform" name="quizform" action={{url('result')}} method='get'>
                                     <input type="hidden" name="starttime" value="">
                                     <input type="hidden" name="subject_id" value="{{$subject_id}}">
                                     <input type="hidden" name="level_id" value="{{$level_id}}">
 
 
                                     @foreach($questions as $question)
-                                        @include('loadquestion',['quest'=>$question])
+                                        @include('tests.loadquestion',['quest'=>$question])
                                     @endforeach
                                     <div id="answerbuttoncontainer">
 

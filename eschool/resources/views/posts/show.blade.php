@@ -1,7 +1,7 @@
 <?php
-    use App\Post;
+use App\Post;
 ?>
-<!DOCTYPE html>
+        <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -11,11 +11,11 @@
     <title>Winku Social Network Toolkit</title>
     <link rel="icon" href="images/fav.png" type="image/png" sizes="16x16">
 
-    <link rel="stylesheet" href="css/main.min.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/color.css">
-    <link rel="stylesheet" href="css/responsive.css">
-    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href={{asset('css/main.min.css')}}>
+    <link rel="stylesheet" href={{asset('css/style.css')}}>
+    <link rel="stylesheet" href={{asset('css/color.css')}}>
+    <link rel="stylesheet" href={{asset('css/responsive.css')}}>
+    <link rel="stylesheet" href={{asset('css/font-awesome.min.css')}}>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
 
@@ -26,7 +26,7 @@
 <!--<div class="se-pre-con"></div>-->
 <div class="theme-layout">
 
-    @include('layouts.header')<!-- responsive header -->
+@include('layouts.header')<!-- responsive header -->
 
     <section>
         <div class="gap gray-bg">
@@ -35,84 +35,21 @@
                     <div class="col-lg-12">
                         <div class="row" id="page-contents">
                             @include('layouts.lsidebar')<!-- sidebar -->
-                            <div class="col-lg-6"><!-- center -->
-                                <div class="central-meta">
-                                    <div class="new-postbox">
-                                        <figure>
-                                            <img src="images/resources/admin2.jpg" alt="">
-                                        </figure>
-                                        <div class="newpst-input">
 
-                                            <form method="post" action="{{url('posts')}}" >
-                                                @csrf
-                                                <textarea rows="1" placeholder="Title" name="title"></textarea>
-                                                <textarea rows="2" placeholder="Write something" name="content"></textarea>
-                                                <div class="attachments">
-                                                    <ul>
-                                                        <li>
-                                                            <i class="fa fa-music"></i>
-                                                            <label class="fileContainer">
-                                                                <input type="file">
-                                                            </label>
-                                                        </li>
-                                                        <li>
-                                                            <i class="fa fa-image"></i>
-                                                            <label class="fileContainer">
-                                                                <input type="file" name="photo">
-                                                            </label>
-                                                        </li>
-                                                        <li>
-                                                            <i class="fa fa-video-camera"></i>
-                                                            <label class="fileContainer">
-                                                                <input type="file">
-                                                            </label>
-                                                        </li>
-                                                        <li>
-                                                            <i class="fa fa-camera"></i>
-                                                            <label class="fileContainer">
-                                                                <input type="file">
-                                                            </label>
-                                                        </li>
-                                                        <li>
-                                                            <button type="submit">Post</button>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                    @if ($errors->any())
-                                        <div class="alert alert-danger" style="margin-top: 50px">
-                                            <ul>
-                                                @foreach ($errors->all() as $error)
-                                                    <li>{{ $error }}</li>
-                                                @endforeach
-                                            </ul>
-                                        </div><br />
-                                    @endif
-                                    @if (\Session::has('success'))
-                                        <div class="alert alert-success" style="margin-top: 50px">
-                                            <p>{{ \Session::get('success') }}</p>
-                                        </div><br />
-                                    @endif
-                                </div><!-- add post -->
+                            <div class="col-lg-6"><!-- center -->
+
                                 <div class="loadMore"><!-- post & cmd -->
 
-                                    @foreach($posts as $post)
-                                        @php
 
-                                            $post_id = $post->id;
-                                            $comments =  App\Comment::where('post_id', $post_id)->orderBy('id','desc')->take(2)->get();
-                                        @endphp
                                         <div class="central-meta item">
                                             <div class="user-post">
                                                 <div class="friend-info">
                                                     <figure>
-                                                        <img src="images/resources/friend-avatar10.jpg" alt="">
+                                                        <img src={{asset('images/resources/friend-avatar10.jpg')}} alt="">
                                                     </figure>
                                                     <div class="friend-name">
                                                         <ins><a href="time-line.html" title="">{{ $post->user->name }}</a></ins>
-                                                        <a href="{{ route('posts.show', ['id' => $post['id'],'comment_length'=>5]) }}" class="lead">{{$post['title']}}</a>
+                                                        <a href="{{ route('posts.show', $post['id']) }}" class="lead">{{$post['title']}}</a>
                                                         <span>published: june,2 2018 19:PM</span>
 
                                                     </div>
@@ -179,25 +116,25 @@
                                                     <ul class="we-comet">
                                                         @foreach($comments as $comment)
 
-                                                        <li>
-                                                            <div class="comet-avatar">
-                                                                <img src="images/resources/comet-1.jpg" alt="">
-                                                            </div>
-                                                            <div class="we-comment">
-                                                                <div class="coment-head">
-                                                                    <h5><a href="time-line.html" title="">Donald Trump</a></h5>
-                                                                    <span>1 week ago</span>
-                                                                    <a class="we-reply" href="#" title="Reply"><i class="fa fa-reply"></i></a>
+                                                            <li>
+                                                                <div class="comet-avatar">
+                                                                    <img src={{asset('images/resources/comet-1.jpg')}} alt="">
                                                                 </div>
-                                                                <p> {{$comment->content}}
-                                                                    <i class="em em-smiley"></i>
-                                                                </p>
-                                                            </div>
-                                                        </li>
+                                                                <div class="we-comment">
+                                                                    <div class="coment-head">
+                                                                        <h5><a href="time-line.html" title="">Donald Trump</a></h5>
+                                                                        <span>1 week ago</span>
+                                                                        <a class="we-reply" href="#" title="Reply"><i class="fa fa-reply"></i></a>
+                                                                    </div>
+                                                                    <p> {{$comment->content}}
+                                                                        <i class="em em-smiley"></i>
+                                                                    </p>
+                                                                </div>
+                                                            </li>
 
                                                         @endforeach
                                                         <li>
-                                                            <a href="{{ route('posts.show', ['id' => $post['id'],'comment_length'=>5]) }}" title="" class="showmore underline">more comments</a>
+                                                            <a href="{{ route('posts.show', ['id' => $post['id'],'comment_length'=>$comment_length+3]) }}" title="" class="showmore underline">more comments</a>
                                                         </li>
                                                         <li class="post-comment">
                                                             <div class="comet-avatar">
@@ -207,7 +144,7 @@
                                                                 <form method="post" action={{url('comment/store')}}>
                                                                     {{ csrf_field() }}
 
-                                                                    <input type="hidden" id="post-id-comment" name="post_id" value={{$post_id}}>
+                                                                    <input type="hidden" id="post-id-comment" name="post_id" value={{$id}}>
                                                                     <textarea  placeholder="Post your comment" required="required" name="content"></textarea>
                                                                     <div class="add-smiles">
                                                                         <span class="em em-expressionless" title="add icon"></span>
@@ -238,7 +175,6 @@
 
                                             </div>
                                         </div>
-                                    @endforeach
 
                                 </div><!-- post & cmd -->
                             </div><!-- center-->
@@ -250,9 +186,9 @@
         </div>
     </section>
 
-    @include('layouts.footer')<!-- responsive footer -->
+@include('layouts.footer')<!-- responsive footer -->
 </div>
-@include('layouts.side-panel')<!-- side panel -->
+
 
 <script data-cfasync="false" src={{asset('js/email-decode.min.js')}}></script>
 <script src={{asset('js/main.min.js')}}></script>

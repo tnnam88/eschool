@@ -11,17 +11,24 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'PostController@index')->middleware('auth');
+
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+/*Post*/
+Route::resource('posts', 'PostController');
+Route::get('/posts/show/{id}/{comment_length?}', 'PostController@show')->name('posts.show');
 
-/*Quiz*/
-Route::get('/quiz', 'QuizController@index')->name('quiz');
-Route::get('/quiz/result','QuizController@result');
+Route::post('/comment/store', 'CommentController@store')->name('comment.add');
+Route::post('/comment/like', 'CommentController@like')->name('comment.like');
+
+Route::get('/showprofile', 'ShowProfileController@index')->name('profiles.show');
+Route::post('/showprofile', 'ShowProfileController@index');
+
+Route::get('/editprofile', 'EditProfileController@index')->name('profiles.edit');
+Route::post('/editprofile', 'EditProfileController@store')->name('profiles.store');
 
 /* Do test */
 Route::get('/dotest', 'TestController@testform')->middleware('auth');
