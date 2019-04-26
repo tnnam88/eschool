@@ -39,40 +39,43 @@
                                 <div class="central-meta">
                                     <div class="new-postbox">
                                         <figure>
-                                            <img src="images/resources/admin2.jpg" alt="">
+                                            <?php
+                                            $avatar = Auth::user()->filename;
+                                            ?>
+                                            <img src="{{url('avatars/'.$avatar)}}" alt="{{$avatar}}">
                                         </figure>
                                         <div class="newpst-input">
 
-                                            <form method="post" action="{{url('posts')}}" >
+                                            <form method="post" action="{{url('posts')}}" enctype="multipart/form-data" >
                                                 @csrf
                                                 <textarea rows="1" placeholder="Title" name="title"></textarea>
                                                 <textarea rows="2" placeholder="Write something" name="content"></textarea>
                                                 <div class="attachments">
                                                     <ul>
-                                                        <li>
-                                                            <i class="fa fa-music"></i>
-                                                            <label class="fileContainer">
-                                                                <input type="file">
-                                                            </label>
-                                                        </li>
+                                                        {{--<li>--}}
+                                                            {{--<i class="fa fa-music"></i>--}}
+                                                            {{--<label class="fileContainer">--}}
+                                                                {{--<input type="file">--}}
+                                                            {{--</label>--}}
+                                                        {{--</li>--}}
                                                         <li>
                                                             <i class="fa fa-image"></i>
                                                             <label class="fileContainer">
                                                                 <input type="file" name="photo">
                                                             </label>
                                                         </li>
-                                                        <li>
-                                                            <i class="fa fa-video-camera"></i>
-                                                            <label class="fileContainer">
-                                                                <input type="file">
-                                                            </label>
-                                                        </li>
-                                                        <li>
-                                                            <i class="fa fa-camera"></i>
-                                                            <label class="fileContainer">
-                                                                <input type="file">
-                                                            </label>
-                                                        </li>
+                                                        {{--<li>--}}
+                                                            {{--<i class="fa fa-video-camera"></i>--}}
+                                                            {{--<label class="fileContainer">--}}
+                                                                {{--<input type="file">--}}
+                                                            {{--</label>--}}
+                                                        {{--</li>--}}
+                                                        {{--<li>--}}
+                                                            {{--<i class="fa fa-camera"></i>--}}
+                                                            {{--<label class="fileContainer">--}}
+                                                                {{--<input type="file">--}}
+                                                            {{--</label>--}}
+                                                        {{--</li>--}}
                                                         <li>
                                                             <button type="submit">Post</button>
                                                         </li>
@@ -108,7 +111,10 @@
                                             <div class="user-post">
                                                 <div class="friend-info">
                                                     <figure>
-                                                        <img src="images/resources/friend-avatar10.jpg" alt="">
+                                                        <?php
+                                                        $avatar = Auth::user()->filename;
+                                                        ?>
+                                                        <img src="{{url('avatars/'.$avatar)}}" alt="{{$avatar}}">
                                                     </figure>
                                                     <div class="friend-name">
                                                         <ins><a href="time-line.html" title="">{{ $post->user->name }}</a></ins>
@@ -181,7 +187,12 @@
 
                                                         <li>
                                                             <div class="comet-avatar">
-                                                                <img src="images/resources/comet-1.jpg" alt="">
+                                                                <figure>
+                                                                    <?php
+                                                                    $avatar = Auth::user()->filename;
+                                                                    ?>
+                                                                    <img src="{{url('avatars/'.$avatar)}}" alt="{{$avatar}}">
+                                                                </figure>
                                                             </div>
                                                             <div class="we-comment">
                                                                 <div class="coment-head">

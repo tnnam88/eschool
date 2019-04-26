@@ -28,6 +28,8 @@ class ShowProfileController extends Controller
         }
         return view('auth.login');
     }
+
+
     public function showmark(Request $request)
     {
         $user = User::all();
@@ -41,6 +43,20 @@ class ShowProfileController extends Controller
         $level = Level::all();
         $subj = $request->subject_id;
         $lv = $request->level_id;
+
+        $s_name="";$l_name="";
+//        foreach ($subject as $s){
+//            if ($s->id == $subj){
+//                $s_name = $s->name;
+//            }
+//        }
+//        foreach ($level as $l){
+//            if ($l->id == $lv){
+//                $l_name = $l->name;
+//            }
+//        }
+
+
         $visitor = DB::table('results')->select('mark','created_at')
             ->where('user_id',$currentuser->id)
             ->where('subject_id',$subj)
@@ -48,12 +64,13 @@ class ShowProfileController extends Controller
             ->orderBy("created_at")
             ->get();
         $result[] = ['Date','Your Mark'];
-        $count = 0;
+
         foreach ($visitor as $key) {
             $dt = new \DateTime($key->created_at);
             $date = $dt->format('m/d/Y');
             $result[] = [$key->created_at, $key->mark];
         }
-        return view('profile.show_mark',['currentuser'=>$currentuser,'subject' => $subject, 'level'=>$level,'visitor'=>json_encode($result)]);
+        return view('profiles.show_mark',['currentuser'=>$currentuser,'subj'=>$s_name,'lv'=>$l_name,
+                          'subject' => $subject, 'level'=>$level,'visitor'=>json_encode($result)]);
     }
 }

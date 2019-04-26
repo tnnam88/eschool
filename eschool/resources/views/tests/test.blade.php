@@ -609,10 +609,11 @@ use Illuminate\Support\Facades\DB;
                                     <div id="answerbuttoncontainer">
 
                                         <button class="answerbutton w3-btn" type="submit" >Submit &#10095;</button>
-                                        <input type="text" readonly name="timetest" id="timespent" value="0:00">
+
 
                                     </div>
                                 </form>
+                                <input type="text" readonly name="timetest" id="timespent" value="0:00">
 
                             </div>
                         </div>

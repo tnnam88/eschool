@@ -20,10 +20,9 @@ class EditProfileController extends Controller
                     $currentuser = $u;
                 }
             }
-            $subject = Subject::all();
-            $level = Level::all();
-            return view('profiles.edit', ['user_name'=> $currentuser->name,'user_email'=> $currentuser->email,'user_city'=> $currentuser->user_city,
-                'subject' => $currentuser->user_fav_subject, 'level'=>$currentuser->user_level,'subject' => $subject, 'level'=>$level]);
+            $subjects = Subject::all();
+            $levels = Level::all();
+            return view('profiles.edit', ['subject' => $subjects, 'level'=>$levels,'currentuser'=>$currentuser]);
         }
         return view('auth.login');
     }
@@ -31,27 +30,23 @@ class EditProfileController extends Controller
     {
         $id = Auth::user()->id;
 
-//        $this->validate(request(), [
-//            'username' => 'required',
-//            'city' => 'required'
-//        ]);
-
-
-//        request()->validate([
-//            'name' => 'required',
-//            'author' => 'required',
-//        ]);
-        $username ="";
         $change_name = $request->get('user_name');
+        $change_email = $request->get('user_email');
+        $change_city = $request->get('user_city');
+
+        //check if user pass null data
         if ($change_name == null){
             $username = Auth::user()->name;
         }else{
             $username = $change_name;
         }
-        $city='';
-        $change_city = $request->get('user_city');
+        if ($change_email == null){
+            $email =Auth::user()->email;
+        }else{
+            $email =$change_email;
+        }
         if ($change_city == null){
-            $city =Auth::user()->user_city;
+            $city =Auth::user()->city;
         }else{
             $city =$change_city;
         }
@@ -63,13 +58,15 @@ class EditProfileController extends Controller
         if (!empty($_POST['user_subject'])){
             $subject = $_POST['user_subject'];
         }else{
-            $subject = Auth::user()->user_fav_subject;
+            $subject = Auth::user()->subject;
         }
+
         if (!empty($_POST['user_level'])){
             $level = $_POST['user_level'];
-        }else{
-            $level = Auth::user()->user_level;
+        }else {
+            $level = Auth::user()->level;
         }
+
         //profile img
         if ($request->file('avatar') != NULL){
 
@@ -81,24 +78,19 @@ class EditProfileController extends Controller
             $mime = $photo->getClientMimeType();
             $original_filename = $photo->getClientOriginalName();
             $filename = $photo->getFilename() . '.' . $extension;
-
-//            $name = $request->file('avatar');
-//            $extension = $name->getClientOriginalExtension();
-//            Storage::disk('public')->put($name->getFilename().'.'.$extension,  File::get($name));
-//            $mime = $name->getClientMimeType();
-//            $original_filename = $name->getClientOriginalName();
-//            $filename = $name->getFilename().'.'.$extension;
         }
         else{
             $mime=Auth::user()->mime;
             $original_filename=Auth::user()->original_filename;
             $filename=Auth::user()->filename;
         }
+        //end check
+
+        //update database
         DB::table('users')->where('id', $id) ->update(
-            ['name'=>$username,'role'=>$role,'mime'=>$mime,'original_filename'=>$original_filename,'filename'=>$filename,
-                'level'=>$level, 'subject' => $subject, 'city'=>$city]
+            ['name'=>$username,'email'=>$email,'role'=>$role,'mime'=>$mime,'original_filename'=>$original_filename
+                ,'filename'=>$filename,'level'=>$level, 'subject' => $subject, 'city'=>$city]
         );
-        $user_name = Auth::user()->name;
         return back()->with('success','Profile updated !');
     }
 }

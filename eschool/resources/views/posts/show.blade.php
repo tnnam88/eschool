@@ -50,7 +50,7 @@ use App\Post;
                                                     <div class="friend-name">
                                                         <ins><a href="time-line.html" title="">{{ $post->user->name }}</a></ins>
                                                         <a href="{{ route('posts.show', $post['id']) }}" class="lead">{{$post['title']}}</a>
-                                                        <span>published: june,2 2018 19:PM</span>
+                                                        <span>{{$post->updated_at->diffForHumans()}}</span>
 
                                                     </div>
                                                     <div class="post-meta">
@@ -123,13 +123,21 @@ use App\Post;
                                                                 <div class="we-comment">
                                                                     <div class="coment-head">
                                                                         <h5><a href="time-line.html" title="">Donald Trump</a></h5>
-                                                                        <span>1 week ago</span>
+                                                                        <span>{{$comment->updated_at->diffForHumans()}}</span>
                                                                         <a class="we-reply" href="#" title="Reply"><i class="fa fa-reply"></i></a>
                                                                     </div>
                                                                     <p> {{$comment->content}}
                                                                         <i class="em em-smiley"></i>
                                                                     </p>
+
                                                                 </div>
+                                                                <p>{{ count($comment->like) }}</p>
+
+                                                                <form action="{{ route('comment.like') }}" method="POST">
+                                                                    <input type="hidden" name="comment_id" value="{{ $comment->id }}" />
+                                                                    {{ csrf_field() }}
+                                                                    <input type = "submit" value = "like" name='like'/>
+                                                                </form>
                                                             </li>
 
                                                         @endforeach

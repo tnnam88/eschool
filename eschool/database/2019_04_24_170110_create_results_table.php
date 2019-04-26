@@ -18,8 +18,8 @@ class CreateResultsTable extends Migration
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('subject_id');
             $table->unsignedInteger('level_id');
-            $table->float('result');
-            $table->string('timetest');
+            $table->smallInteger('mark');
+            $table->integer('time');
             $table->timestamps();
         });
     }

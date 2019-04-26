@@ -38,3 +38,19 @@ Route::get('/result', 'TestController@result');
 /* Teacher add question */
 Route::get('/add_question_form','TestController@addQuestionForm');
 Route::post('/add_question','TestController@addQuestion');
+
+//user profiles v2
+Route::get('/showprofile', 'ShowProfileController@index')->name('profiles.show');
+Route::post('/showprofile', 'ShowProfileController@index')->name('profiles.show');
+
+Route::get('/editprofile', 'EditProfileController@index')->name('profiles.edit');
+Route::post('/editprofile', 'EditProfileController@store')->name('profiles.store');
+
+//route graph
+Route::post('/showmark', 'ShowProfileController@showmark')->name('showmark');
+Route::get('/showmark', 'ShowProfileController@showmark')->name('showmark');
+
+//pasword
+Route::get('/changePassword','HomeController@showChangePasswordForm')->name('showChange');
+
+Route::post('/changePassword','HomeController@changePassword')->name('changePassword');
