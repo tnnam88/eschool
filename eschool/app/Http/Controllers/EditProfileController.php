@@ -8,6 +8,12 @@ use App\Level;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Input;
+
+
+// import the Intervention Image Manager Class
+use Intervention\Image\ImageManagerStatic as Image;
+
 class EditProfileController extends Controller
 {
     public function index()
@@ -22,7 +28,8 @@ class EditProfileController extends Controller
             }
             $subjects = Subject::all();
             $levels = Level::all();
-            return view('profiles.edit', ['subject' => $subjects, 'level'=>$levels,'currentuser'=>$currentuser]);
+            $frs= User::all();
+            return view('profiles.edit', ['subject' => $subjects, 'level'=>$levels,'currentuser'=>$currentuser,'frs'=>$frs]);
         }
         return view('auth.login');
     }
@@ -71,6 +78,8 @@ class EditProfileController extends Controller
         if ($request->file('avatar') != NULL){
 
             $photo = $request->file('avatar');
+//            $avatar = Image::make($photo->getRealPath())->resize(45,45)->save($photo.time().$photo->getClientOriginalName());
+
             $extension = $photo->getClientOriginalExtension();
             Storage::disk('public_avatars')->put($photo->getFilename() . '.' . $extension, File::get($photo));
 
@@ -78,12 +87,16 @@ class EditProfileController extends Controller
             $mime = $photo->getClientMimeType();
             $original_filename = $photo->getClientOriginalName();
             $filename = $photo->getFilename() . '.' . $extension;
+
+
         }
         else{
             $mime=Auth::user()->mime;
             $original_filename=Auth::user()->original_filename;
             $filename=Auth::user()->filename;
         }
+        $frs= User::all();
+
         //end check
 
         //update database
@@ -91,6 +104,6 @@ class EditProfileController extends Controller
             ['name'=>$username,'email'=>$email,'role'=>$role,'mime'=>$mime,'original_filename'=>$original_filename
                 ,'filename'=>$filename,'level'=>$level, 'subject' => $subject, 'city'=>$city]
         );
-        return back()->with('success','Profile updated !');
+        return back()->with('success','Profile updated !',[$frs]);
     }
 }

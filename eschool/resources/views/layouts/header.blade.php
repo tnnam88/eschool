@@ -1,10 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: The Doctor
- * Date: 4/24/2019
- * Time: 10:34 PM
- */
+
+// import the Intervention Image Manager Class
+use Intervention\Image\ImageManagerStatic as Image;
+
+
 ?>
 <div class="responsive-header">
     <div class="mh-head first Sticky">
@@ -27,78 +26,13 @@
     <nav id="menu" class="res-menu">
         <ul>
             <li><span>Home</span>
-                <ul>
-                    <li><a href="index.html" title="">Home Social</a></li>
-                    <li><a href="index2.html" title="">Home Social 2</a></li>
-                    <li><a href="index-company.html" title="">Home Company</a></li>
-                    <li><a href="landing.html" title="">Login page</a></li>
-                    <li><a href="logout.html" title="">Logout Page</a></li>
-                    <li><a href="newsfeed.html" title="">news feed</a></li>
-                </ul>
             </li>
-            <li><span>Time Line</span>
-                <ul>
-                    <li><a href="time-line.html" title="">timeline</a></li>
-                    <li><a href="timeline-friends.html" title="">timeline friends</a></li>
-                    <li><a href="timeline-groups.html" title="">timeline groups</a></li>
-                    <li><a href="timeline-pages.html" title="">timeline pages</a></li>
-                    <li><a href="timeline-photos.html" title="">timeline photos</a></li>
-                    <li><a href="timeline-videos.html" title="">timeline videos</a></li>
-                    <li><a href="fav-page.html" title="">favourit page</a></li>
-                    <li><a href="groups.html" title="">groups page</a></li>
-                    <li><a href="page-likers.html" title="">Likes page</a></li>
-                    <li><a href="people-nearby.html" title="">people nearby</a></li>
-
-
-                </ul>
+            <li><span>Do Test</span>
             </li>
-            <li><span>Account Setting</span>
+            <li><span>Profile</span>
                 <ul>
-                    <li><a href="create-fav-page.html" title="">create fav page</a></li>
-                    <li><a href="edit-account-setting.html" title="">edit account setting</a></li>
-                    <li><a href="edit-interest.html" title="">edit-interest</a></li>
-                    <li><a href="edit-password.html" title="">edit-password</a></li>
+                    <li><a href="{{url('profiles.show')}}" title="">show profile</a></li>
                     <li><a href="{{url('profiles.edit')}}" title="">edit profile basics</a></li>
-                    <li><a href="edit-work-eductation.html" title="">edit work educations</a></li>
-                    <li><a href="messages.html" title="">message box</a></li>
-                    <li><a href="inbox.html" title="">Inbox</a></li>
-                    <li><a href="notifications.html" title="">notifications page</a></li>
-                </ul>
-            </li>
-            <li><span>forum</span>
-                <ul>
-                    <li><a href="forum.html" title="">Forum Page</a></li>
-                    <li><a href="forums-category.html" title="">Fourm Category</a></li>
-                    <li><a href="forum-open-topic.html" title="">Forum Open Topic</a></li>
-                    <li><a href="forum-create-topic.html" title="">Forum Create Topic</a></li>
-                </ul>
-            </li>
-            <li><span>Our Shop</span>
-                <ul>
-                    <li><a href="shop.html" title="">Shop Products</a></li>
-                    <li><a href="shop-masonry.html" title="">Shop Masonry Products</a></li>
-                    <li><a href="shop-single.html" title="">Shop Detail Page</a></li>
-                    <li><a href="shop-cart.html" title="">Shop Product Cart</a></li>
-                    <li><a href="shop-checkout.html" title="">Product Checkout</a></li>
-                </ul>
-            </li>
-            <li><span>Our Blog</span>
-                <ul>
-                    <li><a href="blog-grid-wo-sidebar.html" title="">Our Blog</a></li>
-                    <li><a href="blog-grid-right-sidebar.html" title="">Blog with R-Sidebar</a></li>
-                    <li><a href="blog-grid-left-sidebar.html" title="">Blog with L-Sidebar</a></li>
-                    <li><a href="blog-masonry.html" title="">Blog Masonry Style</a></li>
-                    <li><a href="blog-list-wo-sidebar.html" title="">Blog List Style</a></li>
-                    <li><a href="blog-list-right-sidebar.html" title="">Blog List with R-Sidebar</a></li>
-                    <li><a href="blog-list-left-sidebar.html" title="">Blog List with L-Sidebar</a></li>
-                    <li><a href="blog-detail.html" title="">Blog Post Detail</a></li>
-                </ul>
-            </li>
-            <li><span>Portfolio</span>
-                <ul>
-                    <li><a href="portfolio-2colm.html" title="">Portfolio 2col</a></li>
-                    <li><a href="portfolio-3colm.html" title="">Portfolio 3col</a></li>
-                    <li><a href="portfolio-4colm.html" title="">Portfolio 4col</a></li>
                 </ul>
             </li>
             <li><span>Support & Help</span>
@@ -108,22 +42,6 @@
                     <li><a href="support-and-help-search-result.html" title="">Support & Help Search Result</a></li>
                 </ul>
             </li>
-            <li><span>More pages</span>
-                <ul>
-                    <li><a href="careers.html" title="">Careers</a></li>
-                    <li><a href="career-detail.html" title="">Career Detail</a></li>
-                    <li><a href="404.html" title="">404 error page</a></li>
-                    <li><a href="404-2.html" title="">404 Style2</a></li>
-                    <li><a href="faq.html" title="">faq's page</a></li>
-                    <li><a href="insights.html" title="">insights</a></li>
-                    <li><a href="knowledge-base.html" title="">knowledge base</a></li>
-                </ul>
-            </li>
-            <li><a href="about.html" title="">about</a></li>
-            <li><a href="about-company.html" title="">About Us2</a></li>
-            <li><a href="contact.html" title="">contact</a></li>
-            <li><a href="contact-branches.html" title="">Contact Us2</a></li>
-            <li><a href="widgets.html" title="">Widgts</a></li>
         </ul>
     </nav>
     <nav id="shoppingbag">
@@ -200,60 +118,60 @@
     </div>
 
     <div class="top-area">
-        <ul class="main-menu">
-            <li>
-                <a href="#" title="">Home</a>
-                <ul>
-                    <li><a href="index.html" title="">Home Social</a></li>
-                    <li><a href="index2.html" title="">Home Social 2</a></li>
-                    <li><a href="index-company.html" title="">Home Company</a></li>
-                    <li><a href="landing.html" title="">Login page</a></li>
-                    <li><a href="logout.html" title="">Logout Page</a></li>
-                    <li><a href="newsfeed.html" title="">news feed</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#" title="">timeline</a>
-                <ul>
-                    <li><a href="time-line.html" title="">timeline</a></li>
-                    <li><a href="timeline-friends.html" title="">timeline friends</a></li>
-                    <li><a href="timeline-groups.html" title="">timeline groups</a></li>
-                    <li><a href="timeline-pages.html" title="">timeline pages</a></li>
-                    <li><a href="timeline-photos.html" title="">timeline photos</a></li>
-                    <li><a href="timeline-videos.html" title="">timeline videos</a></li>
-                    <li><a href="fav-page.html" title="">favourit page</a></li>
-                    <li><a href="groups.html" title="">groups page</a></li>
-                    <li><a href="page-likers.html" title="">Likes page</a></li>
-                    <li><a href="people-nearby.html" title="">people nearby</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#" title="">account settings</a>
-                <ul>
-                    <li><a href="create-fav-page.html" title="">create fav page</a></li>
-                    <li><a href="edit-account-setting.html" title="">edit account setting</a></li>
-                    <li><a href="edit-interest.html" title="">edit-interest</a></li>
-                    <li><a href="edit-password.html" title="">edit-password</a></li>
-                    <li><a href="{{url('editprofile')}}" title="">edit profile basics</a></li>
-                    <li><a href="edit-work-eductation.html" title="">edit work educations</a></li>
-                    <li><a href="messages.html" title="">message box</a></li>
-                    <li><a href="inbox.html" title="">Inbox</a></li>
-                    <li><a href="notifications.html" title="">notifications page</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#" title="">more pages</a>
-                <ul>
-                    <li><a href="404.html" title="">404 error page</a></li>
-                    <li><a href="about.html" title="">about</a></li>
-                    <li><a href="contact.html" title="">contact</a></li>
-                    <li><a href="faq.html" title="">faq's page</a></li>
-                    <li><a href="insights.html" title="">insights</a></li>
-                    <li><a href="knowledge-base.html" title="">knowledge base</a></li>
-                    <li><a href="widgets.html" title="">Widgts</a></li>
-                </ul>
-            </li>
-        </ul>
+        {{--<ul class="main-menu">--}}
+            {{--<li>--}}
+                {{--<a href="#" title="">Home</a>--}}
+                {{--<ul>--}}
+                    {{--<li><a href="index.html" title="">Home Social</a></li>--}}
+                    {{--<li><a href="index2.html" title="">Home Social 2</a></li>--}}
+                    {{--<li><a href="index-company.html" title="">Home Company</a></li>--}}
+                    {{--<li><a href="landing.html" title="">Login page</a></li>--}}
+                    {{--<li><a href="logout.html" title="">Logout Page</a></li>--}}
+                    {{--<li><a href="newsfeed.html" title="">news feed</a></li>--}}
+                {{--</ul>--}}
+            {{--</li>--}}
+            {{--<li>--}}
+                {{--<a href="#" title="">timeline</a>--}}
+                {{--<ul>--}}
+                    {{--<li><a href="time-line.html" title="">timeline</a></li>--}}
+                    {{--<li><a href="timeline-friends.html" title="">timeline friends</a></li>--}}
+                    {{--<li><a href="timeline-groups.html" title="">timeline groups</a></li>--}}
+                    {{--<li><a href="timeline-pages.html" title="">timeline pages</a></li>--}}
+                    {{--<li><a href="timeline-photos.html" title="">timeline photos</a></li>--}}
+                    {{--<li><a href="timeline-videos.html" title="">timeline videos</a></li>--}}
+                    {{--<li><a href="fav-page.html" title="">favourit page</a></li>--}}
+                    {{--<li><a href="groups.html" title="">groups page</a></li>--}}
+                    {{--<li><a href="page-likers.html" title="">Likes page</a></li>--}}
+                    {{--<li><a href="people-nearby.html" title="">people nearby</a></li>--}}
+                {{--</ul>--}}
+            {{--</li>--}}
+            {{--<li>--}}
+                {{--<a href="#" title="">account settings</a>--}}
+                {{--<ul>--}}
+                    {{--<li><a href="create-fav-page.html" title="">create fav page</a></li>--}}
+                    {{--<li><a href="edit-account-setting.html" title="">edit account setting</a></li>--}}
+                    {{--<li><a href="edit-interest.html" title="">edit-interest</a></li>--}}
+                    {{--<li><a href="edit-password.html" title="">edit-password</a></li>--}}
+                    {{--<li><a href="{{url('editprofile')}}" title="">edit profile basics</a></li>--}}
+                    {{--<li><a href="edit-work-eductation.html" title="">edit work educations</a></li>--}}
+                    {{--<li><a href="messages.html" title="">message box</a></li>--}}
+                    {{--<li><a href="inbox.html" title="">Inbox</a></li>--}}
+                    {{--<li><a href="notifications.html" title="">notifications page</a></li>--}}
+                {{--</ul>--}}
+            {{--</li>--}}
+            {{--<li>--}}
+                {{--<a href="#" title="">more pages</a>--}}
+                {{--<ul>--}}
+                    {{--<li><a href="404.html" title="">404 error page</a></li>--}}
+                    {{--<li><a href="about.html" title="">about</a></li>--}}
+                    {{--<li><a href="contact.html" title="">contact</a></li>--}}
+                    {{--<li><a href="faq.html" title="">faq's page</a></li>--}}
+                    {{--<li><a href="insights.html" title="">insights</a></li>--}}
+                    {{--<li><a href="knowledge-base.html" title="">knowledge base</a></li>--}}
+                    {{--<li><a href="widgets.html" title="">Widgts</a></li>--}}
+                {{--</ul>--}}
+            {{--</li>--}}
+        {{--</ul>--}}
         <ul class="setting-area">
             <li>
                 <a href="" title="Home" data-ripple=""><i class="ti-search"></i></a>
@@ -264,7 +182,6 @@
                     </form>
                 </div>
             </li>
-            <li><a href="newsfeed.html" title="Home" data-ripple=""><i class="ti-home"></i></a></li>
             <li>
                 <a href="#" title="Notification" data-ripple="">
                     <i class="ti-bell"></i><span>20</span>
@@ -405,28 +322,37 @@
             </li>
         </ul>
         <div class="user-img">
-            <img src="images/resources/admin.jpg"
+            <?php
+            $avatar = Auth::user()->filename;
+
+            ?>
+            <img src="{{url('avatars/'.$avatar)}}" alt="{{$avatar}}">
             <span class="status f-online"></span>
             <div class="user-setting">
                 <a href="#" title=""><span class="status f-online"></span>online</a>
                 <a href="#" title=""><span class="status f-away"></span>away</a>
                 <a href="#" title=""><span class="status f-off"></span>offline</a>
-                <a href="#" title=""><i class="ti-user"></i> view profile</a>
+
                 <a href="#" onclick="event.preventDefault();
-                   document.getElementById('logout-form3').submit();" >
-                    <i class="ti-pencil-alt"></i>edit profile</a>
-                <form id="logout-form3" action="/editprofile" method="get" style="display: none;">
+                   document.getElementById('show_profile').submit();">
+                    <i class="ti-user"></i> show profile</a>
+                <form id="show_profile" action="/showprofile" method="get" style="display: none;">
                     @csrf
                 </form>
-                <a href="#" title=""><i class="ti-target"></i>activity log</a>
-                <a href="#" title=""><i class="ti-settings"></i>account setting</a>
+
+                <a href="#" onclick="event.preventDefault();
+                   document.getElementById('edit_profile').submit();" >
+                    <i class="ti-pencil-alt"></i>edit profile</a>
+                <form id="edit_profile" action="/editprofile" method="get" style="display: none;">
+                    @csrf
+                </form>
+
                 <a href="{{ route('logout') }}"
-                   onclick="event.preventDefault();
+                          onclick="event.preventDefault();
                    document.getElementById('logout-form').submit();">
                     <i class="ti-power-off"></i>
                     {{ __('Logout') }}
                 </a>
-
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                     @csrf
                 </form>

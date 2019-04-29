@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\User;
 use Illuminate\Http\Request;
 use App\Post;
 use App\Comment;
@@ -19,7 +19,8 @@ class PostController extends Controller
     {
 
         $posts = Post::latest()->take($posts_length )->get();
-        return view('welcome', compact('posts'));
+        $frs= User::all();
+        return view('welcome', compact('posts','frs'));
     }
 
     /**
@@ -40,6 +41,7 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+        $frs= User::all();
         $this->validate(request(), [
             'title' => 'required',
             'content' => 'required'
@@ -50,7 +52,7 @@ class PostController extends Controller
         $post->user_id = \Auth::user()->id;
 
 // Store photo of a post
-//        if ($request->file('photo') != NULL) {
+        if ($request->file('photo') != NULL) {
             $photo = $request->file('photo');
             $extension = $photo->getClientOriginalExtension();
             Storage::disk('public')->put($photo->getFilename() . '.' . $extension, File::get($photo));
@@ -59,10 +61,11 @@ class PostController extends Controller
             $post->mime = $photo->getClientMimeType();
             $post->original_filename = $photo->getClientOriginalName();
             $post->filename = $photo->getFilename() . '.' . $extension;
-//        }
+        }
         $post->save();
 
-        return back()->with('success', 'Post has been added');
+
+        return back()->with('success', 'Post has been added',[$frs]);
     }
 
     /**
@@ -75,9 +78,11 @@ class PostController extends Controller
     {
         $post = Post::find($id);
         $comments =  Comment::where('post_id', $id)->orderBy('id','desc')->take($comment_length)->get();
+        $frs = User::all();
 
 
-        return view('posts.show', compact('post','comments','id','comment_length'));
+
+        return view('posts/show', compact('post','comments','id','comment_length','frs'));
     }
 
     /**

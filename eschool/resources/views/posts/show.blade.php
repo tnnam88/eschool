@@ -44,12 +44,17 @@ use App\Post;
                                         <div class="central-meta item">
                                             <div class="user-post">
                                                 <div class="friend-info">
-                                                    <figure>
-                                                        <img src={{asset('images/resources/friend-avatar10.jpg')}} alt="">
+                                                    <figure class="post-avatar">
+                                                        <?php
+                                                        $post_user = App\User::where('id',$post->user_id)->first();
+                                                        $post_avatar = $post_user->filename;
+
+                                                        ?>
+                                                        <img src="{{url('avatars/'.$post_avatar)}}" alt="{{$post_avatar}}">
                                                     </figure>
                                                     <div class="friend-name">
                                                         <ins><a href="time-line.html" title="">{{ $post->user->name }}</a></ins>
-                                                        <a href="{{ route('posts.show', $post['id']) }}" class="lead">{{$post['title']}}</a>
+                                                        <a href="#" class="lead">{{$post['title']}}</a>
                                                         <span>{{$post->updated_at->diffForHumans()}}</span>
 
                                                     </div>
@@ -115,29 +120,57 @@ use App\Post;
                                                 <div class="coment-area"><!--  cmd -->
                                                     <ul class="we-comet">
                                                         @foreach($comments as $comment)
+                                                            <?php
+                                                                $cm_user= App\User::where('id',$comment->user_id)->first();
+                                                                $cm_avatar = $cm_user->filename;
+                                                            ?>
 
                                                             <li>
                                                                 <div class="comet-avatar">
-                                                                    <img src={{asset('images/resources/comet-1.jpg')}} alt="">
+                                                                    <img src={{url('avatars/'.$cm_avatar)}} alt="">
                                                                 </div>
                                                                 <div class="we-comment">
                                                                     <div class="coment-head">
-                                                                        <h5><a href="time-line.html" title="">Donald Trump</a></h5>
+                                                                        <h5><a href="time-line.html" title="">{{$cm_user->name}}</a></h5>
                                                                         <span>{{$comment->updated_at->diffForHumans()}}</span>
-                                                                        <a class="we-reply" href="#" title="Reply"><i class="fa fa-reply"></i></a>
+                                                                        <span class="comment" data-toggle="tooltip" title="Like this comment">
+                                                                                <a
+                                                                                        href="#" onclick="event.preventDefault();
+                                                                                        document.getElementById('{{'like'.$comment->id}}').submit();">
+                                                                                <i class="fa fa-thumbs-up"></i>
+                                                                                </a>
+                                                                                <ins>{{ count($comment->like) }}</ins>
+                                                                                <form id={{'like'.$comment->id}} action="{{ route('comment.like') }}" method="POST" style="display: none;">
+                                                                                    <input type="hidden" name="comment_id" value="{{ $comment->id }}" />
+                                                                                    @csrf
+                                                                                    <input type = "submit" value = "like" name='like'/>
+                                                                                </form>
+                                                                            </span>
                                                                     </div>
                                                                     <p> {{$comment->content}}
                                                                         <i class="em em-smiley"></i>
                                                                     </p>
 
                                                                 </div>
-                                                                <p>{{ count($comment->like) }}</p>
-
-                                                                <form action="{{ route('comment.like') }}" method="POST">
-                                                                    <input type="hidden" name="comment_id" value="{{ $comment->id }}" />
-                                                                    {{ csrf_field() }}
-                                                                    <input type = "submit" value = "like" name='like'/>
-                                                                </form>
+                                                                {{--<div class="we-video-info">--}}
+                                                                    {{--<ul>--}}
+                                                                        {{--<li>--}}
+                                                                            {{--<span class="comment" data-toggle="tooltip" title="Comments">--}}
+                                                                                {{--<a--}}
+                                                                                   {{--href="#" onclick="event.preventDefault();--}}
+                                                                                    {{--document.getElementById('{{'like'.$comment->id}}').submit();">--}}
+                                                                                {{--<i class="fa fa-thumbs-up"></i>--}}
+                                                                                {{--</a>--}}
+                                                                                {{--<ins>{{ count($comment->like) }}</ins>--}}
+                                                                                {{--<form id={{'like'.$comment->id}} action="{{ route('comment.like') }}" method="POST" style="display: none;">--}}
+                                                                                    {{--<input type="hidden" name="comment_id" value="{{ $comment->id }}" />--}}
+                                                                                    {{--@csrf--}}
+                                                                                    {{--<input type = "submit" value = "like" name='like'/>--}}
+                                                                                {{--</form>--}}
+                                                                            {{--</span>--}}
+                                                                        {{--</li>--}}
+                                                                    {{--</ul>--}}
+                                                                {{--</div>--}}
                                                             </li>
 
                                                         @endforeach

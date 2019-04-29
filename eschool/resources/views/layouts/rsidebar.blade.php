@@ -104,101 +104,24 @@
             <h4 class="widget-title">Friends</h4>
             <div id="searchDir"></div>
             <ul id="people-list" class="friendz-list">
+                @foreach($frs as $fr)
+                    @if($fr->id != Auth::user()->id)
                 <li>
-                    <figure>
-                        <img src={{asset('images/resources/friend-avatar.jpg')}} alt="">
-                        <span class="status f-online"></span>
+                    <figure class="user-img">
+                        <img src={{url('avatars/'.$fr->filename)}} alt="">
+                        @if($fr->isOnline())
+                            <span class="status f-online"></span>
+                        @else
+                            <span class="status f-offline"></span>
+                        @endif
                     </figure>
                     <div class="friendz-meta">
-                        <a href="time-line.html">bucky barnes</a>
-                        <i><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b5c2dcdbc1d0c7c6dad9d1d0c7f5d2d8d4dcd99bd6dad8">[email&#160;protected]</a></i>
+                        <a href="time-line.html">{{$fr->name}}</a>
+                        <a href="/cdn-cgi/l/email-protection" >{{$fr->email}}</a></i>
                     </div>
                 </li>
-                <li>
-                    <figure>
-                        <img src={{asset('images/resources/friend-avatar2.jpg')}} alt="">
-                        <span class="status f-away"></span>
-                    </figure>
-                    <div class="friendz-meta">
-                        <a href="time-line.html">Sarah Loren</a>
-                        <i><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="fc9e9d8e92998fbc9b919d9590d29f9391">[email&#160;protected]</a></i>
-                    </div>
-                </li>
-                <li>
-                    <figure>
-                        <img src={{asset('images/resources/friend-avatar3.jpg')}} alt="">
-                        <span class="status f-off"></span>
-                    </figure>
-                    <div class="friendz-meta">
-                        <a href="time-line.html">jason borne</a>
-                        <i><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3852594b57565a785f55595154165b5755">[email&#160;protected]</a></i>
-                    </div>
-                </li>
-                <li>
-                    <figure>
-                        <img src={{asset('images/resources/friend-avatar4.jpg')}} alt="">
-                        <span class="status f-off"></span>
-                    </figure>
-                    <div class="friendz-meta">
-                        <a href="time-line.html">Cameron diaz</a>
-                        <i><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d1bbb0a2bebfb391b6bcb0b8bdffb2bebc">[email&#160;protected]</a></i>
-                    </div>
-                </li>
-                <li>
-
-                    <figure>
-                        <img src={{asset('images/resources/friend-avatar5.jpg')}} alt="">
-                        <span class="status f-online"></span>
-                    </figure>
-                    <div class="friendz-meta">
-                        <a href="time-line.html">daniel warber</a>
-                        <i><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="244e45574b4a46644349454d480a474b49">[email&#160;protected]</a></i>
-                    </div>
-                </li>
-                <li>
-
-                    <figure>
-                        <img src={{asset('images/resources/friend-avatar6.jpg')}} alt="">
-                        <span class="status f-away"></span>
-                    </figure>
-                    <div class="friendz-meta">
-                        <a href="time-line.html">andrew</a>
-                        <i><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="442e25372b2a26042329252d286a272b29">[email&#160;protected]</a></i>
-                    </div>
-                </li>
-                <li>
-
-                    <figure>
-                        <img src={{asset('images/resources/friend-avatar1.jpg')}} alt="">
-                        <span class="status f-off"></span>
-                    </figure>
-                    <div class="friendz-meta">
-                        <a href="time-line.html">amy watson</a>
-                        <i><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="355f54465a5b57755258545c591b565a58">[email&#160;protected]</a></i>
-                    </div>
-                </li>
-                <li>
-
-                    <figure>
-                        <img src={{asset('images/resources/friend-avatar2.jpg')}} alt="">
-                        <span class="status f-online"></span>
-                    </figure>
-                    <div class="friendz-meta">
-                        <a href="time-line.html">daniel warber</a>
-                        <i><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="472d263428292507202a262e2b6924282a">[email&#160;protected]</a></i>
-                    </div>
-                </li>
-                <li>
-
-                    <figure>
-                        <img src={{asset('images/resources/friend-avatar4.jpg')}} alt="">
-                        <span class="status f-away"></span>
-                    </figure>
-                    <div class="friendz-meta">
-                        <a href="time-line.html">Sarah Loren</a>
-                        <i><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7d1f1c0f13180e3d1a101c1411531e1210">[email&#160;protected]</a></i>
-                    </div>
-                </li>
+                    @endif
+                @endforeach
             </ul>
             <div class="chat-box">
                 <div class="chat-head">

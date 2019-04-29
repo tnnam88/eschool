@@ -10046,3 +10046,32 @@ aside.sidebar.full-style {
     text-transform: uppercase;
 }
 
+
+/*add style*/
+
+.avatar img{
+    width:60px;
+    height: 60px;
+    overflow: hidden;
+}
+.post-avatar img{
+    width:55px;
+    height: 55px;
+    overflow: hidden;
+}
+.comet-avatar img{
+    width:45px;
+    height: 45px;
+    overflow: hidden;
+}
+.logo img{
+     width:  95px;
+     height: 34px;
+     overflow: hidden;
+ }
+
+.user-img img{
+    width:45px;
+    height: 45px;
+    overflow: hidden;
+}

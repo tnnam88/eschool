@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\User;
 
 
 class TestController extends Controller
@@ -19,7 +20,8 @@ class TestController extends Controller
     {
         $levels = DB::table('levels')->get();
         $subjects = DB::table('subjects')->get();
-        return view('tests.testform',['levels'=>$levels,'subjects'=>$subjects]);
+        $frs= User::all();
+        return view('tests.testform',['levels'=>$levels,'subjects'=>$subjects,'frs'=>$frs]);
     }
 
     /**
@@ -37,7 +39,8 @@ class TestController extends Controller
             ->inRandomOrder()
             ->limit(3)
             ->get();
-        return view('tests.test',['questions'=>$questions,'level_id'=>$level_id,'subject_id'=>$subject_id]);
+        $frs= User::all();
+        return view('tests.test',['questions'=>$questions,'level_id'=>$level_id,'subject_id'=>$subject_id,'frs'=>$frs]);
     }
 
     /**
@@ -59,7 +62,8 @@ class TestController extends Controller
     {
         $levels = DB::table('levels')->get();
         $subjects = DB::table('subjects')->get();
-        return view('tests.addQuestionForm',['levels'=>$levels,'subjects'=>$subjects]);
+        $frs= User::all();
+        return view('tests.addQuestionForm',['levels'=>$levels,'subjects'=>$subjects,'frs'=>$frs]);
     }
 
     /**
@@ -105,7 +109,8 @@ class TestController extends Controller
         DB::table('answers')->insert(
             ['question_id' => $question_id, 'content' => $answer, 'is_correct' => 1]
         );
-        return view('tests.addQuestionResult');
+        $frs= User::all();
+        return view('tests.addQuestionResult',compact('frs'));
     }
 
     /**
@@ -139,12 +144,12 @@ class TestController extends Controller
                 $p += $answer->is_correct;
             }
         }
-        $p = $p*100/3;
         DB::table('results')->insert(
             ['user_id'=>$user_id,'subject_id'=>$subject_id,'level_id'=>$level_id,'result'=>$p,'timetest'=>$timetest]
         );
+        $frs= User::all();
 
-        return view('tests.result',['p'=>$p,'timetest'=>$timetest]);
+        return view('tests.result',['p'=>$p,'timetest'=>$timetest,'frs'=>$frs]);
     }
 
     /**

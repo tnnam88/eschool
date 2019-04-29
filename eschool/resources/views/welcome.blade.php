@@ -1,5 +1,9 @@
 <?php
     use App\Post;
+    // import the Intervention Image Manager Class
+    use Intervention\Image\ImageManagerStatic as Image;
+
+
 ?>
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -28,7 +32,7 @@
 
     @include('layouts.header')<!-- responsive header -->
 
-    <section>
+    <section><!-- main web-->
         <div class="gap gray-bg">
             <div class="container-fluid">
                 <div class="row">
@@ -38,9 +42,10 @@
                             <div class="col-lg-6"><!-- center -->
                                 <div class="central-meta">
                                     <div class="new-postbox">
-                                        <figure>
+                                        <figure class="avatar">
                                             <?php
                                             $avatar = Auth::user()->filename;
+//                                            Image::make('avatars/'.$avatar)->resize(45,45)->save();
                                             ?>
                                             <img src="{{url('avatars/'.$avatar)}}" alt="{{$avatar}}">
                                         </figure>
@@ -106,20 +111,18 @@
 
                                             $post_id = $post->id;
                                             $comments =  App\Comment::where('post_id', $post_id)->orderBy('id','desc')->take(2)->get();
+                                            $avatar = App\User::where('id',$post->user_id)->first()->filename;
                                         @endphp
                                         <div class="central-meta item">
                                             <div class="user-post">
                                                 <div class="friend-info">
-                                                    <figure>
-                                                        <?php
-                                                        $avatar = Auth::user()->filename;
-                                                        ?>
+                                                    <figure class="post-avatar">
                                                         <img src="{{url('avatars/'.$avatar)}}" alt="{{$avatar}}">
                                                     </figure>
                                                     <div class="friend-name">
                                                         <ins><a href="time-line.html" title="">{{ $post->user->name }}</a></ins>
                                                         <a href="{{ route('posts.show', ['id' => $post['id'],'comment_length'=>5]) }}" class="lead">{{$post['title']}}</a>
-                                                        <span>published: june,2 2018 19:PM</span>
+                                                        <span>{{$post->updated_at->diffForHumans()}}</span>
 
                                                     </div>
                                                     <div class="post-meta">
@@ -129,10 +132,10 @@
                                                             <ul>
 
                                                                 <li>
-															<span class="comment" data-toggle="tooltip" title="Comments">
-																<i class="fa fa-comments-o"></i>
-																<ins>{{ count($post->comment) }}</ins>
-															</span>
+															        <span class="comment" data-toggle="tooltip" title="Comments">
+																        <i class="fa fa-comments-o"></i>
+																        <ins>{{ count($post->comment) }}</ins>
+															        </span>
                                                                 </li>
 
 
@@ -187,17 +190,18 @@
 
                                                         <li>
                                                             <div class="comet-avatar">
-                                                                <figure>
+
                                                                     <?php
-                                                                    $avatar = Auth::user()->filename;
+                                                                    $cm_user = App\User::where('id',$comment->user_id)->first();
+                                                                    $cm_avatar = $cm_user->filename;
                                                                     ?>
-                                                                    <img src="{{url('avatars/'.$avatar)}}" alt="{{$avatar}}">
-                                                                </figure>
+                                                                    <img src="{{url('avatars/'.$cm_avatar)}}" alt="{{$cm_avatar}}">
+
                                                             </div>
                                                             <div class="we-comment">
                                                                 <div class="coment-head">
-                                                                    <h5><a href="time-line.html" title="">Donald Trump</a></h5>
-                                                                    <span>1 week ago</span>
+                                                                    <h5><a href="time-line.html" title="">{{$cm_user->name}}</a></h5>
+                                                                    <span>{{$comment->updated_at->diffForHumans()}}</span>
                                                                     <a class="we-reply" href="#" title="Reply"><i class="fa fa-reply"></i></a>
                                                                 </div>
                                                                 <p> {{$comment->content}}
@@ -212,7 +216,10 @@
                                                         </li>
                                                         <li class="post-comment">
                                                             <div class="comet-avatar">
-                                                                <img src="images/resources/comet-1.jpg" alt="">
+                                                                <?php
+                                                                $avatar = Auth::user()->filename;
+                                                                ?>
+                                                                <img src="{{url('avatars/'.$avatar)}}" alt="{{$avatar}}">
                                                             </div>
                                                             <div class="post-comt-box">
                                                                 <form method="post" action={{url('comment/store')}}>
@@ -252,6 +259,7 @@
                                     @endforeach
 
                                 </div><!-- post & cmd -->
+
                             </div><!-- center-->
                             @include('layouts.rsidebar')<!-- sidebar -->
                         </div>
@@ -263,6 +271,7 @@
 
     @include('layouts.footer')<!-- responsive footer -->
 </div>
+
 @include('layouts.side-panel')<!-- side panel -->
 
 <script data-cfasync="false" src={{asset('js/email-decode.min.js')}}></script>
@@ -273,3 +282,4 @@
 
 </body>
 </html>
+

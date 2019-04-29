@@ -24,7 +24,7 @@ class ShowProfileController extends Controller
             }
             $subject = Subject::all();
             $level = Level::all();
-            return view('profiles.show', ['currentuser'=> $currentuser,'subject' => $subject, 'level'=>$level]);
+            return view('profiles.show', ['currentuser'=> $currentuser,'subject' => $subject, 'level'=>$level,'frs'=>$user]);
         }
         return view('auth.login');
     }
@@ -70,7 +70,8 @@ class ShowProfileController extends Controller
             $date = $dt->format('m/d/Y');
             $result[] = [$key->created_at, $key->mark];
         }
+        $frs= User::all();
         return view('profiles.show_mark',['currentuser'=>$currentuser,'subj'=>$s_name,'lv'=>$l_name,
-                          'subject' => $subject, 'level'=>$level,'visitor'=>json_encode($result)]);
+                          'subject' => $subject, 'level'=>$level,'visitor'=>json_encode($result),'frs'=>$frs]);
     }
 }

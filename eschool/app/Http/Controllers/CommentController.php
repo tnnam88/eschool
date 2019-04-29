@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\User;
 use App\Comment;
 use Illuminate\Support\Facades\Auth;
 use App\Post;
@@ -45,8 +46,9 @@ class CommentController extends Controller
         $comment->like_count = 0;
 //        $post = Post::find($request->get('post_id'));
         $comment->save();
+        $frs= User::all();
 
-        return back(); //Session
+        return redirect()->route('posts.show', ['id' => $comment->post_id,'comment_length'=>5]); //Session
     }
 
     /**
@@ -107,15 +109,15 @@ class CommentController extends Controller
         $like->comment_id = $request->comment_id;
         $like->user_id = Auth::user()->id;
         $liked = Like::where('comment_id', '=', $like->comment_id)->where('user_id', '=', $like->user_id)->count();
-
+        $frs= User::all();
         if ($liked == 0)
         {
             $like->save();
             Session::flash('msg_cmt_added', 'You have liked a comment');
-            return back(); //Session
+            return back()->with([$frs]); //Session
         } else {
             Session::flash('msg_cmt_not_added', 'You already liked this comment');
-            return back(); //Session
+            return back()->with([$frs]); //Session
         }
 
     }
