@@ -24,6 +24,18 @@ class PostController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function wall($user_id,$posts_length =3 )
+    {
+        $posts = Post::where('user_id',$user_id)->take($posts_length)->get();
+        $frs= User::all();
+        return view('wall', compact('posts','frs','user_id'));
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response

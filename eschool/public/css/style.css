@@ -10075,3 +10075,8 @@ aside.sidebar.full-style {
     height: 45px;
     overflow: hidden;
 }
+.wall-avatar img{
+    width: 164px;
+    height: 160px;
+    overflow: hidden;
+}

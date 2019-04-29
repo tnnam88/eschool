@@ -53,7 +53,7 @@ use App\Post;
                                                         <img src="{{url('avatars/'.$post_avatar)}}" alt="{{$post_avatar}}">
                                                     </figure>
                                                     <div class="friend-name">
-                                                        <ins><a href="time-line.html" title="">{{ $post->user->name }}</a></ins>
+                                                        <ins><a href="{{url('user/'.$post_user->id)}}" title="">{{ $post->user->name }}</a></ins>
                                                         <a href="#" class="lead">{{$post['title']}}</a>
                                                         <span>{{$post->updated_at->diffForHumans()}}</span>
 
@@ -131,7 +131,7 @@ use App\Post;
                                                                 </div>
                                                                 <div class="we-comment">
                                                                     <div class="coment-head">
-                                                                        <h5><a href="time-line.html" title="">{{$cm_user->name}}</a></h5>
+                                                                        <h5><a href="{{url('user/'.$cm_user->id)}}" title="">{{$cm_user->name}}</a></h5>
                                                                         <span>{{$comment->updated_at->diffForHumans()}}</span>
                                                                         <span class="comment" data-toggle="tooltip" title="Like this comment">
                                                                                 <a

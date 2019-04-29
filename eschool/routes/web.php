@@ -20,6 +20,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 /*Post*/
 Route::resource('posts', 'PostController');
 Route::get('/posts/show/{id}/{comment_length?}', 'PostController@show')->name('posts.show');
+Route::get('/user/{user_id}','PostController@wall')->name('wall');
 
 Route::post('/comment/store', 'CommentController@store')->name('comment.add');
 Route::post('/comment/like', 'CommentController@like')->name('comment.like');

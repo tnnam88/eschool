@@ -1,12 +1,6 @@
-<?php
-    use App\Post;
-    // import the Intervention Image Manager Class
-    use Intervention\Image\ImageManagerStatic as Image;
 
-
-?>
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,15 +9,10 @@
     <title>Winku Social Network Toolkit</title>
     <link rel="icon" href="images/fav.png" type="image/png" sizes="16x16">
 
-    <link rel="stylesheet" href="css/main.min.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/color.css">
-    <link rel="stylesheet" href="css/responsive.css">
-    <link rel="stylesheet" href="css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
-
-
+    <link rel="stylesheet" href="{{asset('css/main.min.css')}}">
+    <link rel="stylesheet" href="{{asset('css/style.css')}}">
+    <link rel="stylesheet" href="{{asset('css/color.css')}}">
+    <link rel="stylesheet" href="{{asset('css/responsive.css')}}">
 
 </head>
 <body>
@@ -32,14 +21,73 @@
 
     @include('layouts.header')<!-- responsive header -->
 
-    <section><!-- main web-->
+    <section>
+        <div class="feature-photo">
+            <figure>
+                <img src="{{asset('images/resources/timeline-1.jpg')}}" alt=""></figure>
+            <div class="add-btn">
+                <span>1205 followers</span>
+                <a href="#" title="" data-ripple="">Add Friend</a>
+            </div>
+            <form class="edit-phto">
+                <i class="fa fa-camera-retro"></i>
+                <label class="fileContainer">
+                    Edit Cover Photo
+                    <input type="file"/>
+                </label>
+            </form>
+            <div class="container-fluid">
+                <div class="row merged">
+                    <div class="col-lg-2 col-sm-3">
+                        <div class="user-avatar">
+                            <?php
+                                $wall_user = App\User::where('id',$user_id)->first();
+                                $wall_avatar = $wall_user->filename;
+                            ?>
+                            <figure class="wall-avatar">
+                                <img src="{{asset('avatars/'.$wall_avatar)}}" alt="">
+                                <form class="edit-phto">
+                                    <i class="fa fa-camera-retro"></i>
+                                    <label class="fileContainer">
+                                        Edit Display Photo
+                                        <input type="file"/>
+                                    </label>
+                                </form>
+                            </figure>
+                        </div>
+                    </div>
+                    <div class="col-lg-10 col-sm-9">
+                        <div class="timeline-info">
+                            <ul>
+                                <li class="admin-name">
+                                    <h5>{{$wall_user->name}}</h5>
+                                    <span>{{$wall_user->role}}</span>
+                                </li>
+                                <li>
+                                    <a class="active" href="time-line.html" title="" data-ripple="">time line</a>
+                                    <a class="" href="timeline-photos.html" title="" data-ripple="">Photos</a>
+                                    <a class="" href="timeline-videos.html" title="" data-ripple="">Videos</a>
+                                    <a class="" href="timeline-friends.html" title="" data-ripple="">Friends</a>
+                                    <a class="" href="timeline-groups.html" title="" data-ripple="">Groups</a>
+                                    <a class="" href="about.html" title="" data-ripple="">about</a>
+                                    <a class="" href="#" title="" data-ripple="">more</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section><!-- top area -->
+
+    <section>
         <div class="gap gray-bg">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="row" id="page-contents">
                             @include('layouts.lsidebar')<!-- lsidebar -->
-                            <div class="col-lg-6"><!-- center -->
+                                <div class="col-lg-6"><!-- center -->
                                     <div class="central-meta">
                                         <div class="new-postbox">
                                             <figure class="avatar">
@@ -271,15 +319,12 @@
 
     @include('layouts.footer')<!-- responsive footer -->
 </div>
-
 @include('layouts.side-panel')<!-- side panel -->
 
-<script data-cfasync="false" src={{asset('js/email-decode.min.js')}}></script>
-<script src={{asset('js/main.min.js')}}></script>
-<script src={{asset('js/script.js')}}></script>
-<script src={{asset('js/map-init.js')}}></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8c55_YHLvDHGACkQscgbGLtLRdxBDCfI"></script>
+<script data-cfasync="false" src="{{asset('js/email-decode.min.js')}}">
+
+</script><script src="{{asset('js/main.min.js')}}"></script>
+<script src="{{asset('js/script.js')}}"></script>
 
 </body>
 </html>
-
