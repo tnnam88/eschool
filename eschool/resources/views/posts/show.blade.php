@@ -119,46 +119,24 @@ use App\Post;
                                                 </div><!-- post-->
                                                 <div class="coment-area"><!--  cmd -->
                                                     <ul class="we-comet">
-                                                        @foreach($comments as $comment)
-                                                            <?php
-                                                                $cm_user= App\User::where('id',$comment->user_id)->first();
-                                                                $cm_avatar = $cm_user->filename;
-                                                            ?>
+                                                        {{--@foreach($comments as $comment)--}}
+                                                            {{--<?php--}}
+                                                                {{--$cm_user= App\User::where('id',$comment->user_id)->first();--}}
+                                                                {{--$cm_avatar = $cm_user->filename;--}}
+                                                            {{--?>--}}
 
-                                                            <li>
-                                                                <div class="comet-avatar">
-                                                                    <img src={{url('avatars/'.$cm_avatar)}} alt="">
-                                                                </div>
-                                                                <div class="we-comment">
-                                                                    <div class="coment-head">
-                                                                        <h5><a href="{{url('user/'.$cm_user->id)}}" title="">{{$cm_user->name}}</a></h5>
-                                                                        <span>{{$comment->updated_at->diffForHumans()}}</span>
-                                                                        <span class="comment" data-toggle="tooltip" title="Like this comment">
-                                                                                <a
-                                                                                        href="#" onclick="event.preventDefault();
-                                                                                        document.getElementById('{{'like'.$comment->id}}').submit();">
-                                                                                <i class="fa fa-thumbs-up"></i>
-                                                                                </a>
-                                                                                <ins>{{ count($comment->like) }}</ins>
-                                                                                <form id={{'like'.$comment->id}} action="{{ route('comment.like') }}" method="POST" style="display: none;">
-                                                                                    <input type="hidden" name="comment_id" value="{{ $comment->id }}" />
-                                                                                    @csrf
-                                                                                    <input type = "submit" value = "like" name='like'/>
-                                                                                </form>
-                                                                            </span>
-                                                                    </div>
-                                                                    <p> {{$comment->content}}
-                                                                        <i class="em em-smiley"></i>
-                                                                    </p>
-
-                                                                </div>
-                                                                {{--<div class="we-video-info">--}}
-                                                                    {{--<ul>--}}
-                                                                        {{--<li>--}}
-                                                                            {{--<span class="comment" data-toggle="tooltip" title="Comments">--}}
+                                                            {{--<li>--}}
+                                                                {{--<div class="comet-avatar">--}}
+                                                                    {{--<img src={{url('avatars/'.$cm_avatar)}} alt="">--}}
+                                                                {{--</div>--}}
+                                                                {{--<div class="we-comment">--}}
+                                                                    {{--<div class="coment-head">--}}
+                                                                        {{--<h5><a href="{{url('user/'.$cm_user->id)}}" title="">{{$cm_user->name}}</a></h5>--}}
+                                                                        {{--<span>{{$comment->updated_at->diffForHumans()}}</span>--}}
+                                                                        {{--<span class="comment" data-toggle="tooltip" title="Like this comment">--}}
                                                                                 {{--<a--}}
-                                                                                   {{--href="#" onclick="event.preventDefault();--}}
-                                                                                    {{--document.getElementById('{{'like'.$comment->id}}').submit();">--}}
+                                                                                        {{--href="#" onclick="event.preventDefault();--}}
+                                                                                        {{--document.getElementById('{{'like'.$comment->id}}').submit();">--}}
                                                                                 {{--<i class="fa fa-thumbs-up"></i>--}}
                                                                                 {{--</a>--}}
                                                                                 {{--<ins>{{ count($comment->like) }}</ins>--}}
@@ -168,14 +146,21 @@ use App\Post;
                                                                                     {{--<input type = "submit" value = "like" name='like'/>--}}
                                                                                 {{--</form>--}}
                                                                             {{--</span>--}}
-                                                                        {{--</li>--}}
-                                                                    {{--</ul>--}}
-                                                                {{--</div>--}}
-                                                            </li>
+                                                                    {{--</div>--}}
+                                                                    {{--<p> {{$comment->content}}--}}
+                                                                        {{--<i class="em em-smiley"></i>--}}
+                                                                    {{--</p>--}}
 
-                                                        @endforeach
+                                                                {{--</div>--}}
+                                                            {{--</li>--}}
+
+                                                        {{--@endforeach--}}
+
+                                                        {{ csrf_field() }}
+                                                        <div id="post_data"></div>
                                                         <li>
-                                                            <a href="{{ route('posts.show', ['id' => $post['id'],'comment_length'=>$comment_length+3]) }}" title="" class="showmore underline">more comments</a>
+                                                            {{--<a href="{{ route('posts.show', ['id' => $post['id'],'comment_length'=>$comment_length+3]) }}" title="" class="showmore underline">more comments</a>--}}
+
                                                         </li>
                                                         <li class="post-comment">
                                                             <div class="comet-avatar">
@@ -236,6 +221,35 @@ use App\Post;
 <script src={{asset('js/script.js')}}></script>
 <script src={{asset('js/map-init.js')}}></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8c55_YHLvDHGACkQscgbGLtLRdxBDCfI"></script>
+<script>
+    $(document).ready(function(){
+
+        var _token = $('input[name="_token"]').val();
+
+        load_data('', _token);
+
+        function load_data(id="", _token)
+        {
+            $.ajax({
+                url:"{{ route('loadmore.load_data') }}",
+                method:"POST",
+                data:{id:id, _token:_token},
+                success:function(data)
+                {
+                    $('#load_more_button').remove();
+                    $('#post_data').append(data);
+                }
+            })
+        }
+
+        $(document).on('click', '#load_more_button', function(){
+            var id = $(this).data('id');
+            $('#load_more_button').html('<b>Loading...</b>');
+            load_data(id, _token);
+        });
+
+    });
+</script>
 
 </body>
 </html>
