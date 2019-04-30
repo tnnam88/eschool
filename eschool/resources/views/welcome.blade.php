@@ -189,6 +189,27 @@
             load_cmt(id,post_id, _token);
         });
 
+        function changelike(user_id="",cmt_id="",_token) {
+            $.ajax({
+                url:"{{route('changelike')}}",
+                method:"POST",
+                data:{user_id:user_id,cmt_id: cmt_id,_token:_token},
+                success:function(data)
+                {
+                    $('#changelike'+cmt_id).html("");
+                    $('#changelike'+cmt_id).append(data);
+                }
+            });
+        }
+
+
+        $(document).on('click','.changelike',function () {
+            var user_id = $(this).data('like_user');
+            var cmt_id = $(this).data('like_cmt');
+            changelike(user_id,cmt_id,_token);
+
+        });
+
 
 
 

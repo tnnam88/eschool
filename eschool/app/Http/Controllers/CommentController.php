@@ -8,6 +8,7 @@ use App\Comment;
 use Illuminate\Support\Facades\Auth;
 use App\Post;
 use App\Like;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 class CommentController extends Controller
 {
@@ -103,21 +104,72 @@ class CommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function like(Request $request)
+//    public function like(Request $request)
+//    {
+//        $like = new Like;
+//        $like->comment_id = $request->comment_id;
+//        $like->user_id = Auth::user()->id;
+//        $liked = Like::where('comment_id', '=', $like->comment_id)->where('user_id', '=', $like->user_id)->count();
+//        $frs= User::all();
+//        if ($liked == 0)
+//        {
+//            $like->save();
+//            Session::flash('msg_cmt_added', 'You have liked a comment');
+//            return back()->with([$frs]); //Session
+//        } else {
+//            Session::flash('msg_cmt_not_added', 'You already liked this comment');
+//            return back()->with([$frs]); //Session
+//        }
+//
+//    }
+
+    public function changelike(Request $request)
     {
-        $like = new Like;
-        $like->comment_id = $request->comment_id;
-        $like->user_id = Auth::user()->id;
-        $liked = Like::where('comment_id', '=', $like->comment_id)->where('user_id', '=', $like->user_id)->count();
-        $frs= User::all();
-        if ($liked == 0)
+        if($request->ajax())
         {
-            $like->save();
-            Session::flash('msg_cmt_added', 'You have liked a comment');
-            return back()->with([$frs]); //Session
-        } else {
-            Session::flash('msg_cmt_not_added', 'You already liked this comment');
-            return back()->with([$frs]); //Session
+            $output="";
+            $like_count ="";
+            $check_like=DB::table('likes')
+                ->where('user_id','=',$request->user_id)
+                ->where('comment_id','=',$request->cmt_id)
+                ->delete();
+            if($check_like)
+            {
+                $like_count = DB::table('likes')
+                    ->where('comment_id','=',$request->cmt_id)
+                    ->count();
+
+                $output .= '
+                    <ins>'.$like_count.'</ins>
+                    <i  class="fa fa-thumbs-o-up we-reply" title=""></i>
+                    
+                    <button class="changelike" title=""
+                    id="like'.$request->cmt_id.'"
+                    data-like_user="'.$request->user_id.'" data-like_cmt="'.$request->cmt_id.'" type="button">
+                    Like this comment!
+                    </button>
+                ';
+            }
+            else
+            {
+                Db::table('likes')
+                    ->insert(['user_id'=>$request->user_id,'comment_id'=>$request->cmt_id]);
+
+                $like_count = DB::table('likes')
+                    ->where('comment_id','=',$request->cmt_id)
+                    ->count();
+
+                $output .= '
+                    <ins>'.$like_count.'</ins>
+                    <i  class="fa fa-thumbs-up we-reply" title=""></i>
+                    <button class="changelike" title=""
+                    id="like'.$request->cmt_id.'"
+                    data-like_user="'.$request->user_id.'" data-like_cmt="'.$request->cmt_id.'" type="button">
+                    Liked!
+                    </button>
+                ';
+            }
+            echo $output;
         }
 
     }

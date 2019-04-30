@@ -6,13 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="" />
     <meta name="keywords" content="" />
-    <title>Winku Social Network Toolkit</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Eschool Uruk Babylon</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
+
     <link rel="icon" href="images/fav.png" type="image/png" sizes="16x16">
 
     <link rel="stylesheet" href="{{asset('css/main.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/style.css')}}">
     <link rel="stylesheet" href="{{asset('css/color.css')}}">
     <link rel="stylesheet" href="{{asset('css/responsive.css')}}">
+    <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 </head>
 <body>
@@ -41,7 +51,7 @@
                     <div class="col-lg-2 col-sm-3">
                         <div class="user-avatar">
                             <?php
-                                $wall_user = App\User::where('id',$user_id)->first();
+                                $wall_user = App\User::where('id',$wall_id)->first();
                                 $wall_avatar = $wall_user->filename;
                             ?>
                             <figure class="wall-avatar">
@@ -79,243 +89,31 @@
             </div>
         </div>
     </section><!-- top area -->
-
-    <section>
-        <div class="gap gray-bg">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="row" id="page-contents">
+    <section><!-- main web-->
+            <div class="gap gray-bg">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="row" id="page-contents">
                             @include('layouts.lsidebar')<!-- lsidebar -->
                                 <div class="col-lg-6"><!-- center -->
-                                    <div class="central-meta">
-                                        <div class="new-postbox">
-                                            <figure class="avatar">
-                                                <?php
-                                                $avatar = Auth::user()->filename;
-                                                //                                            Image::make('avatars/'.$avatar)->resize(45,45)->save();
-                                                ?>
-                                                <img src="{{url('avatars/'.$avatar)}}" alt="{{$avatar}}">
-                                            </figure>
-                                            <div class="newpst-input">
 
-                                                <form method="post" action="{{url('posts')}}" enctype="multipart/form-data" >
-                                                    @csrf
-                                                    <textarea rows="1" placeholder="Title" name="title"></textarea>
-                                                    <textarea rows="2" placeholder="Write something" name="content"></textarea>
-                                                    <div class="attachments">
-                                                        <ul>
-                                                            {{--<li>--}}
-                                                            {{--<i class="fa fa-music"></i>--}}
-                                                            {{--<label class="fileContainer">--}}
-                                                            {{--<input type="file">--}}
-                                                            {{--</label>--}}
-                                                            {{--</li>--}}
-                                                            <li>
-                                                                <i class="fa fa-image"></i>
-                                                                <label class="fileContainer">
-                                                                    <input type="file" name="photo">
-                                                                </label>
-                                                            </li>
-                                                            {{--<li>--}}
-                                                            {{--<i class="fa fa-video-camera"></i>--}}
-                                                            {{--<label class="fileContainer">--}}
-                                                            {{--<input type="file">--}}
-                                                            {{--</label>--}}
-                                                            {{--</li>--}}
-                                                            {{--<li>--}}
-                                                            {{--<i class="fa fa-camera"></i>--}}
-                                                            {{--<label class="fileContainer">--}}
-                                                            {{--<input type="file">--}}
-                                                            {{--</label>--}}
-                                                            {{--</li>--}}
-                                                            <li>
-                                                                <button type="submit">Post</button>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                        @if ($errors->any())
-                                            <div class="alert alert-danger" style="margin-top: 50px">
-                                                <ul>
-                                                    @foreach ($errors->all() as $error)
-                                                        <li>{{ $error }}</li>
-                                                    @endforeach
-                                                </ul>
-                                            </div><br />
-                                        @endif
-                                        @if (\Session::has('success'))
-                                            <div class="alert alert-success" style="margin-top: 50px">
-                                                <p>{{ \Session::get('success') }}</p>
-                                            </div><br />
-                                        @endif
-                                    </div><!-- add post -->
-                                    <div class="loadMore"><!-- post & cmd -->
-
-                                        @foreach($posts as $post)
-                                            @php
-
-                                                $post_id = $post->id;
-                                                $comments =  App\Comment::where('post_id', $post_id)->orderBy('id','desc')->take(2)->get();
-                                                $avatar = App\User::where('id',$post->user_id)->first()->filename;
-                                            @endphp
-                                            <div class="central-meta item">
-                                                <div class="user-post">
-                                                    <div class="friend-info">
-                                                        <figure class="post-avatar">
-                                                            <img src="{{url('avatars/'.$avatar)}}" alt="{{$avatar}}">
-                                                        </figure>
-                                                        <div class="friend-name">
-                                                            <ins><a href="{{url('user/'.$post->user_id)}}" title="">{{ $post->user->name }}</a></ins>
-                                                            <a href="{{ route('posts.show', ['id' => $post['id'],'comment_length'=>5]) }}" class="lead">{{$post['title']}}</a>
-                                                            <span>{{$post->updated_at->diffForHumans()}}</span>
-
-                                                        </div>
-                                                        <div class="post-meta">
-                                                            <img src="{{url('uploads/'.$post->filename)}}" alt="{{$post->filename}}">
-
-                                                            <div class="we-video-info">
-                                                                <ul>
-
-                                                                    <li>
-															        <span class="comment" data-toggle="tooltip" title="Comments">
-																        <i class="fa fa-comments-o"></i>
-																        <ins>{{ count($post->comment) }}</ins>
-															        </span>
-                                                                    </li>
+                                    {{ csrf_field() }}
+                                    <div class="loadMore" id="post_data" data-wall="{{$wall_id}}"><!-- post & cmd -->
 
 
-                                                                    <li class="social-media">
-                                                                        <div class="menu">
-                                                                            <div class="btn trigger"><i class="fa fa-share-alt"></i></div>
-                                                                            <div class="rotater">
-                                                                                <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-html5"></i></a></div>
-                                                                            </div>
-                                                                            <div class="rotater">
-                                                                                <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-facebook"></i></a></div>
-                                                                            </div>
-                                                                            <div class="rotater">
-                                                                                <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-google-plus"></i></a></div>
-                                                                            </div>
-                                                                            <div class="rotater">
-                                                                                <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-twitter"></i></a></div>
-                                                                            </div>
-                                                                            <div class="rotater">
-                                                                                <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-css3"></i></a></div>
-                                                                            </div>
-                                                                            <div class="rotater">
-                                                                                <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-instagram"></i></a>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="rotater">
-                                                                                <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-dribbble"></i></a>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="rotater">
-                                                                                <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-pinterest"></i></a>
-                                                                                </div>
-                                                                            </div>
 
-                                                                        </div>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-
-                                                            <div class="description">
-
-                                                                <p>
-                                                                    {{$post['content']}}
-                                                                </p>
-                                                            </div>
-                                                        </div>
-
-                                                    </div><!-- post-->
-                                                    <div class="coment-area"><!--  cmd -->
-                                                        <ul class="we-comet">
-                                                            @foreach($comments as $comment)
-
-                                                                <li>
-                                                                    <div class="comet-avatar">
-
-                                                                        <?php
-                                                                        $cm_user = App\User::where('id',$comment->user_id)->first();
-                                                                        $cm_avatar = $cm_user->filename;
-                                                                        ?>
-                                                                        <img src="{{url('avatars/'.$cm_avatar)}}" alt="{{$cm_avatar}}">
-
-                                                                    </div>
-                                                                    <div class="we-comment">
-                                                                        <div class="coment-head">
-                                                                            <h5><a href="{{url('user/'.$cm_user->id)}}" title="">{{$cm_user->name}}</a></h5>
-                                                                            <span>{{$comment->updated_at->diffForHumans()}}</span>
-                                                                            <a class="we-reply" href="#" title="Reply"><i class="fa fa-reply"></i></a>
-                                                                        </div>
-                                                                        <p> {{$comment->content}}
-                                                                            <i class="em em-smiley"></i>
-                                                                        </p>
-                                                                    </div>
-                                                                </li>
-
-                                                            @endforeach
-                                                            <li>
-                                                                <a href="{{ route('posts.show', ['id' => $post['id'],'comment_length'=>5]) }}" title="" class="showmore underline">more comments</a>
-                                                            </li>
-                                                            <li class="post-comment">
-                                                                <div class="comet-avatar">
-                                                                    <?php
-                                                                    $avatar = Auth::user()->filename;
-                                                                    ?>
-                                                                    <img src="{{url('avatars/'.$avatar)}}" alt="{{$avatar}}">
-                                                                </div>
-                                                                <div class="post-comt-box">
-                                                                    <form method="post" action={{url('comment/store')}}>
-                                                                        {{ csrf_field() }}
-
-                                                                        <input type="hidden" id="post-id-comment" name="post_id" value={{$post_id}}>
-                                                                        <textarea  placeholder="Post your comment" required="required" name="content"></textarea>
-                                                                        <div class="add-smiles">
-                                                                            <span class="em em-expressionless" title="add icon"></span>
-                                                                        </div>
-                                                                        <div class="smiles-bunch">
-                                                                            <i class="em em---1"></i>
-                                                                            <i class="em em-smiley"></i>
-                                                                            <i class="em em-anguished"></i>
-                                                                            <i class="em em-laughing"></i>
-                                                                            <i class="em em-angry"></i>
-                                                                            <i class="em em-astonished"></i>
-                                                                            <i class="em em-blush"></i>
-                                                                            <i class="em em-disappointed"></i>
-                                                                            <i class="em em-worried"></i>
-                                                                            <i class="em em-kissing_heart"></i>
-                                                                            <i class="em em-rage"></i>
-                                                                            <i class="em em-stuck_out_tongue"></i>
-                                                                        </div>
-
-
-                                                                        <button type="submit">Comment</button>
-
-                                                                    </form>
-                                                                </div>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                        @endforeach
 
                                     </div><!-- post & cmd -->
 
                                 </div><!-- center-->
                             @include('layouts.rsidebar')<!-- rsidebar -->
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
     @include('layouts.footer')<!-- responsive footer -->
 </div>
@@ -325,6 +123,78 @@
 
 </script><script src="{{asset('js/main.min.js')}}"></script>
 <script src="{{asset('js/script.js')}}"></script>
+<script>
+    $(document).ready(function(){
+
+        var _token = $('input[name="_token"]').val();
+        var wall_user_id = $('#post_data').data('wall');
+
+        load_data('',wall_user_id, _token);
+
+        function load_data(id="",wall_user_id, _token)
+        {
+            $.ajax({
+                url:"{{ route('wall') }}",
+                method:"POST",
+                data:{id:id,wall_user_id:wall_user_id, _token:_token},
+                success:function(data)
+                {
+                    $('#load_more_button').remove();
+                    $('#post_data').append(data);
+                }
+            });
+        }
+
+        $(document).on('click', '#load_more_button', function(){
+            var id = $(this).data('id');
+            $('#load_more_button').html('<b>Loading...</b>');
+            load_data(id,wall_user_id, _token);
+        });
+
+        function load_cmt(id="", post_id="", _token)
+        {
+            $.ajax({
+                url:"{{ route('loadcmt') }}",
+                method:"POST",
+                data:{id:id, post_id:post_id, _token:_token},
+                success:function(data)
+                {
+                    $('#load_more_cmt'+post_id).remove();
+                    $('#post-cmt'+post_id).append(data);
+
+                }
+            });
+        }
+
+        $(document).on('click', '.load_more_cmt', function(){
+            var id = $(this).data('id');
+            var post_id = $(this).data('post');
+            $(this).html('<b>Loading...</b>');
+            load_cmt(id,post_id, _token);
+        });
+
+        function changelike(user_id="",cmt_id="",_token) {
+            $.ajax({
+                url:"{{route('changelike')}}",
+                method:"POST",
+                data:{user_id:user_id,cmt_id: cmt_id,_token:_token},
+                success:function(data)
+                {
+                    $('#changelike'+cmt_id).html("");
+                    $('#changelike'+cmt_id).append(data);
+                }
+            });
+        }
+
+
+        $(document).on('click','.changelike',function () {
+            var user_id = $(this).data('like_user');
+            var cmt_id = $(this).data('like_cmt');
+            changelike(user_id,cmt_id,_token);
+
+        });
+    });
+</script><!-- ajax -->
 
 </body>
 </html>
