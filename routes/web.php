@@ -11,13 +11,12 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'WelcomeController@index')->name('welcome');
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'PostController@index');
+
 
 Route::resource('posts', 'PostController');
 
@@ -31,3 +30,6 @@ Route::post('/showprofile', 'ShowProfileController@index');
 
 Route::get('/editprofile', 'EditProfileController@index')->name('profiles.edit');
 Route::post('/editprofile', 'EditProfileController@store')->name('profiles.store');
+
+Route::get('/loadmore', 'LoadMoreController@index');
+Route::post('/loadmore/load_data', 'LoadMoreController@load_data')->name('loadmore.load_data');

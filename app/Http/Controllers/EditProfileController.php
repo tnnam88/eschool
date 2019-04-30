@@ -8,6 +8,7 @@ use App\Level;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use Intervention\Image\ImageManagerStatic as Image;
 class EditProfileController extends Controller
 {
     public function index()
@@ -74,6 +75,8 @@ class EditProfileController extends Controller
         if ($request->file('avatar') != NULL){
 
             $photo = $request->file('avatar');
+
+
             $extension = $photo->getClientOriginalExtension();
             Storage::disk('public_avatars')->put($photo->getFilename() . '.' . $extension, File::get($photo));
 
@@ -81,6 +84,8 @@ class EditProfileController extends Controller
             $mime = $photo->getClientMimeType();
             $original_filename = $photo->getClientOriginalName();
             $filename = $photo->getFilename() . '.' . $extension;
+
+
 
 //            $name = $request->file('avatar');
 //            $extension = $name->getClientOriginalExtension();

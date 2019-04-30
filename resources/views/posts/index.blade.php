@@ -518,28 +518,18 @@
                                         </ul>
                                     </div><!-- Shortcuts -->
                                     <div class="widget">
-                                        <h4 class="widget-title">Recent Activity</h4>
+                                        <h4 class="widget-title">Your Recent Posts</h4>
                                         <ul class="activitiez">
+                                            @foreach ($recents as $recent)
                                             <li>
                                                 <div class="activity-meta">
-                                                    <i>10 hours Ago</i>
-                                                    <span><a href="#" title="">Commented on Video posted </a></span>
-                                                    <h6>by <a href="time-line.html">black demon.</a></h6>
+                                                    <i>{{$recent->updated_at->diffForHumans()}}</i>
+                                                    <span><a href="{{route('posts.show', $recent['id'])}}" title="">{{$recent->title}} </a></span>
+                                                    {{--<h6>by <a href="time-line.html">black demon.</a></h6>--}}
                                                 </div>
                                             </li>
-                                            <li>
-                                                <div class="activity-meta">
-                                                    <i>30 Days Ago</i>
-                                                    <span><a href="#" title="">Posted your status. “Hello guys, how are you?”</a></span>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="activity-meta">
-                                                    <i>2 Years Ago</i>
-                                                    <span><a href="#" title="">Share a video on her timeline.</a></span>
-                                                    <h6>"<a href="#">you are so funny mr.been.</a>"</h6>
-                                                </div>
-                                            </li>
+
+                                            @endforeach
                                         </ul>
                                     </div><!-- recent activites -->
                                     <div class="widget stick-widget">
@@ -588,7 +578,11 @@
                                 <div class="central-meta">
                                     <div class="new-postbox">
                                         <figure>
-                                            <img src="images/resources/admin2.jpg" alt="">
+                                            <?php
+                                                $avatar = Auth::user()->filename;
+                                            ?>
+                                                <img src="{{url('avatars/'.$avatar)}}" alt="{{$avatar}}">
+
                                         </figure>
                                         <div class="newpst-input">
                                             <form method="post" action="{{url('posts')}}" enctype="multipart/form-data">
@@ -627,24 +621,29 @@
                                         </div><br />
                                     @endif
                                 </div><!-- add post new box -->
-                                <div class="loadMore">
+                                <div class="loadMore" id="post_data">
 
                                     @foreach($posts as $post)
 
-                                    <div class="central-meta item">
+                                    <div class="central-meta item" id="{{$post['id']}}">
                                         <div class="user-post">
                                             <div class="friend-info">
                                                 <figure>
-                                                    <img src="images/resources/friend-avatar10.jpg" alt="">
+                                                    <?php
+                                                    $avatar = Auth::user()->filename;
+                                                    ?>
+                                                    <img src="{{url('avatars/'.$avatar)}}" alt="{{$avatar}}">
                                                 </figure>
                                                 <div class="friend-name">
                                                     <ins><a href="time-line.html" title="">{{ $post->user->name }}</a></ins>
                                                     <a href="{{ route('posts.show', $post['id']) }}" class="lead">{{$post['title']}}</a>
-                                                    <span>published: june,2 2018 19:PM</span>
+                                                    <span>published: {{$post->updated_at->diffForHumans()}}</span>
 
                                                 </div>
                                                 <div class="post-meta">
+                                                   @if ($post->filename != NULL)
                                                     <img src="{{url('uploads/'.$post->filename)}}" alt="{{$post->filename}}">
+                                                    @endif
 
                                                     <div class="we-video-info">
                                                         <ul>
@@ -657,39 +656,6 @@
                                                             </li>
 
 
-                                                            <li class="social-media">
-                                                                <div class="menu">
-                                                                    <div class="btn trigger"><i class="fa fa-share-alt"></i></div>
-                                                                    <div class="rotater">
-                                                                        <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-html5"></i></a></div>
-                                                                    </div>
-                                                                    <div class="rotater">
-                                                                        <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-facebook"></i></a></div>
-                                                                    </div>
-                                                                    <div class="rotater">
-                                                                        <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-google-plus"></i></a></div>
-                                                                    </div>
-                                                                    <div class="rotater">
-                                                                        <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-twitter"></i></a></div>
-                                                                    </div>
-                                                                    <div class="rotater">
-                                                                        <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-css3"></i></a></div>
-                                                                    </div>
-                                                                    <div class="rotater">
-                                                                        <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-instagram"></i></a>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="rotater">
-                                                                        <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-dribbble"></i></a>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="rotater">
-                                                                        <div class="btn btn-icon"><a href="#" title=""><i class="fa fa-pinterest"></i></a>
-                                                                        </div>
-                                                                    </div>
-
-                                                                </div>
-                                                            </li>
                                                         </ul>
                                                     </div>
                                                     <div class="description">
@@ -704,9 +670,13 @@
                                         </div>
                                     </div>
                                     @endforeach
-
-
                                 </div>
+                                <?php
+                                $post = $posts->last();
+                                ?>
+
+                                <button type="button" name="load_more_button" class="btn btn-success form-control" data-id="{{$post['id']}}" id="load_more_button">Load More</button>
+
                             </div><!-- centerl meta -->
                             <div class="col-lg-3">
                                 <aside class="sidebar static">
@@ -714,23 +684,26 @@
                                         <h4 class="widget-title">Your page</h4>
                                         <div class="your-page">
                                             <figure>
-                                                <a href="#" title=""><img src="images/resources/friend-avatar9.jpg" alt=""></a>
+                                                <?php
+                                                $avatar = Auth::user()->filename;
+                                                ?>
+                                                <img src="{{url('avatars/'.$avatar)}}" alt="{{$avatar}}">
                                             </figure>
                                             <div class="page-meta">
-                                                <a href="#" title="" class="underline">My page</a>
-                                                <span><i class="ti-comment"></i><a href="insight.html" title="">Messages <em>9</em></a></span>
-                                                <span><i class="ti-bell"></i><a href="insight.html" title="">Notifications <em>2</em></a></span>
+                                                <a href="#" title="" class="underline">{{Auth::user()->name}}</a>
+                                                <span><i class="ti-comment"></i><a href="insight.html" title="">Posts <em>{{$posts_count}}</em></a></span>
+                                                <span><i class="ti-bell"></i><a href="insight.html" title="">Comments <em>{{$comment_count}}</em></a></span>
                                             </div>
                                             <div class="page-likes">
                                                 <ul class="nav nav-tabs likes-btn">
-                                                    <li class="nav-item"><a class="active" href="#link1" data-toggle="tab">likes</a></li>
-                                                    <li class="nav-item"><a class="" href="#link2" data-toggle="tab">views</a></li>
+                                                    <li class="nav-item"><a class="active" href="#link1" data-toggle="tab">this week</a></li>
+                                                    <li class="nav-item"><a class="" href="#link2" data-toggle="tab">all time</a></li>
                                                 </ul>
                                                 <!-- Tab panes -->
                                                 <div class="tab-content">
                                                     <div class="tab-pane active fade show " id="link1" >
-                                                        <span><i class="ti-heart"></i>884</span>
-                                                        <a href="#" title="weekly-likes">35 new likes this week</a>
+                                                        <span><i class="ti-heart"></i>{{$like_week}}</span>
+                                                        <a href="#" title="weekly-likes">{{$like_week}} new likes this week</a>
                                                         <div class="users-thumb-list">
                                                             <a href="#" title="Anderw" data-toggle="tooltip">
                                                                 <img src="images/resources/userlist-1.jpg" alt="">
@@ -756,8 +729,8 @@
                                                         </div>
                                                     </div>
                                                     <div class="tab-pane fade" id="link2" >
-                                                        <span><i class="ti-eye"></i>440</span>
-                                                        <a href="#" title="weekly-likes">440 new views this week</a>
+                                                        <span><i class="ti-heart"></i>{{$like_all}}</span>
+                                                        <a href="#" title="weekly-likes">{{$like_all}} likes in total</a>
                                                         <div class="users-thumb-list">
                                                             <a href="#" title="Anderw" data-toggle="tooltip">
                                                                 <img src="images/resources/userlist-1.jpg" alt="">
@@ -1128,75 +1101,38 @@
 <script src="js/map-init.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8c55_YHLvDHGACkQscgbGLtLRdxBDCfI"></script>
 
+<script>
+    $(document).ready(function(){
+
+        var _token = $('input[name="_token"]').val();
+
+        load_data('', _token);
+
+        function load_data(id="", _token)
+        {
+            $.ajax({
+                url:"{{ route('loadmore.load_data') }}",
+                method:"POST",
+                data:{id:id, _token:_token},
+                success:function(data)
+                {
+                    $('#load_more_button').remove();
+                    $('#post_data').append(data);
+                }
+            })
+        }
+
+        $(document).on('click', '#load_more_button', function(){
+            var id = $(this).data('id');
+            $('#load_more_button').html('<b>Loading...</b>');
+            load_data(id, _token);
+        });
+
+    });
+</script>
+
+
 </body>
 </html>
 
 
-
-
-
-
-{{--<!DOCTYPE html>--}}
-{{--<html>--}}
-{{--<head>--}}
-    {{--<meta charset="utf-8">--}}
-    {{--<title>Index Page</title>--}}
-    {{--<link rel="stylesheet" href="{{asset('css/app.css')}}">--}}
-{{--</head>--}}
-{{--<body>--}}
-
-{{--<div class="container">--}}
-
-
-
-    {{--@if (Route::has('login'))--}}
-        {{--<div class="top-right links">--}}
-            {{--@if (Auth::check())--}}
-                {{--<a href="{{ url('/home') }}">Home</a>--}}
-            {{--@else--}}
-                {{--<a href="{{ url('/login') }}">Login</a>--}}
-                {{--<a href="{{ url('/register') }}">Register</a>--}}
-            {{--@endif--}}
-        {{--</div>--}}
-    {{--@endif--}}
-    {{--<br />--}}
-
-
-    {{--@if (\Session::has('success')) {--}}
-        {{--<div class="alert alert-warning">--}}
-            {{--<p>{{ \Session::get('success') }}</p>--}}
-        {{--</div> }--}}
-
-        {{--@endif--}}
-
-
-
-
-
-    {{--<table class="table table-striped">--}}
-        {{--<thead>--}}
-        {{--<tr>--}}
-            {{--<th>ID</th>--}}
-            {{--<th>Title</th>--}}
-            {{--<th>Posted by</th>--}}
-            {{--<th>Replies</th>--}}
-            {{--<th colspan="2">Action</th>--}}
-        {{--</tr>--}}
-        {{--</thead>--}}
-        {{--<tbody>--}}
-        {{--@foreach($posts as $post)--}}
-            {{--<tr>--}}
-                {{--<td>{{$post['id']}}</td>--}}
-                {{--<td>{{$post['title']}}</td>--}}
-                {{--$post must be object to be accessed through Eloquent, dont use all()->toArray() in Controller--}}
-                {{--<td>{{ $post->user->name }}</td>--}}
-                {{--<td>{{ count($post->comment) }}</td>--}}
-                {{--<td><a href="{{ route('posts.show', $post['id']) }}" class="btn btn-primary">Show Post</a></td>--}}
-
-            {{--</tr>--}}
-        {{--@endforeach--}}
-        {{--</tbody>--}}
-    {{--</table>--}}
-{{--</div>--}}
-{{--</body>--}}
-{{--</html>--}}

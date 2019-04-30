@@ -13,22 +13,23 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-//        Schema::create('users', function (Blueprint $table) {
-//            $table->bigIncrements('id');
-//            $table->string('name');
-//            $table->string('email')->unique();
-//            $table->timestamp('email_verified_at')->nullable();
-//            $table->string('password');
-//            $table->string('role')->default('guest');
-//            $table->string('city')->nullable();
-//            $table->string('subject')->nullable();
-//            $table->string('filename')->nullable();
-//            $table->string('mime')->nullable();
-//            $table->string('original_filename')->nullable();
-//            $table->smallInteger('level')->nullable();
-//            $table->rememberToken();
-//            $table->timestamps();
-//        });
+        Schema::create('users', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->string('role')->default('student');
+            $table->string('city')->nullable();
+            $table->string('subject')->nullable();
+            $table->smallInteger('level')->nullable();
+            $table->string('filename')->nullable();
+            $table->string('mime')->nullable();
+            $table->string('original_filename')->nullable();
+
+            $table->rememberToken();
+            $table->timestamps();
+        });
     }
 
     /**
