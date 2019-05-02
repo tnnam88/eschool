@@ -44,6 +44,8 @@ class PostController extends Controller
             ->orderBy('id','DESC')
             ->limit(5)
             ->get();
+// ROR RECENT POST
+        $recents = Post::where('user_id', '=', $user->id)->latest()->take(5)->get();
         $frs= User::all();
         return view('welcome', compact('frs','notifications','not_count','activities','user'));
     }
@@ -800,29 +802,6 @@ class PostController extends Controller
         return view('posts.show', compact('id','frs','notifications','not_count','activities','user'));
     }
 
-    /* show 5 newest post of user */
-    public function index5()
-    {
-        $posts = Post::latest()->take(5)->get();
-        $id = \Auth::user()->id;
-        $recents = Post::where('user_id', '=', $id)->latest()->take(5)->get();
-        $posts_count = Post::where('user_id', '=', $id)->count();
-        $comment_count = Comment:: where('user_id', '=', $id)->count();
-// Count all likes that an user received over time
-        $cmtbyid = Comment:: where('user_id', '=', $id)->get();
-        $like_all = 0;
-        foreach ($cmtbyid as $cmt) {
-            $like_all += Like::where('comment_id', '=', $cmt->id)->count();
-        }
-//Count only likes that an user received last 7 days
-        $date = \Carbon\Carbon::today()->subDays(7);
-        $cmtweek = Comment::where('user_id', '=', $id)->where('created_at', '>=', $date)->get();
-        $like_week = 0;
-        foreach ($cmtweek as $cmt) {
-            $like_week += Like::where('comment_id', '=', $cmt->id)->count();
-        }
-        return view('posts.index', compact('posts', 'recents', 'posts_count', 'comment_count', 'like_week', 'like_all'));
-    }
 
     public function manager()
     {

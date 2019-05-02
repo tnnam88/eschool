@@ -6,6 +6,12 @@
  * Time: 10:36 PM
  */
 use Illuminate\Support\Carbon;
+
+use App\Post;
+// ROR RECENT POST
+$id = \Auth::user()->id;
+$recents = Post::where('user_id', '=', $id)->latest()->take(5)->get();
+
 ?>
 <div class="col-lg-3">
     <aside class="sidebar static">
@@ -98,6 +104,21 @@ use Illuminate\Support\Carbon;
                             <i>{{$dif}}</i>
                             <span>{{$activy->content}} <create></span>
                             <h6>: <a href="">{{$receiver_info}}</a></h6>
+                        </div>
+                    </li>
+
+                @endforeach
+            </ul>
+        </div><!-- recent activites -->
+        <div class="widget">
+            <h4 class="widget-title">Your Recent Posts</h4>
+            <ul class="activitiez">
+                @foreach ($recents as $recent)
+                    <li>
+                        <div class="activity-meta">
+                            <i>{{$recent->updated_at->diffForHumans()}}</i>
+                            <span><a href="{{route('posts.show', $recent['id'])}}" title="">{{$recent->title}} </a></span>
+                            {{--<h6>by <a href="time-line.html">black demon.</a></h6>--}}
                         </div>
                     </li>
 

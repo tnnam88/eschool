@@ -18,10 +18,32 @@ class TestController extends Controller
      */
     public function testform()
     {
+
         $levels = DB::table('levels')->get();
         $subjects = DB::table('subjects')->get();
+        $user = Auth::user();
+        $notifications = DB::table('notifications')
+            ->where('receiver_id','=',$user->id)
+            ->where('sender_id','!=',$user->id)
+            ->where('checked','=',0)
+            ->orderBy('id','DESC')
+            ->limit(5)
+            ->get();
+        $not_count = DB::table('notifications')
+            ->where('receiver_id','=',$user->id)
+            ->where('sender_id','!=',$user->id)
+            ->where('checked','=',0)
+            ->orderBy('id','DESC')
+            ->count();
+        $activities = DB::table('notifications')
+            ->where('sender_id','=',$user->id)
+            ->where('checked','=',0)
+            ->orderBy('id','DESC')
+            ->limit(5)
+            ->get();
         $frs= User::all();
-        return view('tests.testform',['levels'=>$levels,'subjects'=>$subjects,'frs'=>$frs]);
+        return view('tests.testform', compact('frs','notifications','not_count','activities','user','levels','subjects'));
+
     }
 
     /**
@@ -39,8 +61,29 @@ class TestController extends Controller
             ->inRandomOrder()
             ->limit(3)
             ->get();
+        $user = Auth::user();
+        $notifications = DB::table('notifications')
+            ->where('receiver_id','=',$user->id)
+            ->where('sender_id','!=',$user->id)
+            ->where('checked','=',0)
+            ->orderBy('id','DESC')
+            ->limit(5)
+            ->get();
+        $not_count = DB::table('notifications')
+            ->where('receiver_id','=',$user->id)
+            ->where('sender_id','!=',$user->id)
+            ->where('checked','=',0)
+            ->orderBy('id','DESC')
+            ->count();
+        $activities = DB::table('notifications')
+            ->where('sender_id','=',$user->id)
+            ->where('checked','=',0)
+            ->orderBy('id','DESC')
+            ->limit(5)
+            ->get();
         $frs= User::all();
-        return view('tests.test',['questions'=>$questions,'level_id'=>$level_id,'subject_id'=>$subject_id,'frs'=>$frs]);
+        return view('tests.test', compact('frs','notifications','not_count','activities','user','levels','subjects','questions','level_id','subject_id'));
+
     }
 
     /**
@@ -62,8 +105,30 @@ class TestController extends Controller
     {
         $levels = DB::table('levels')->get();
         $subjects = DB::table('subjects')->get();
+        $user = Auth::user();
+        $notifications = DB::table('notifications')
+            ->where('receiver_id','=',$user->id)
+            ->where('sender_id','!=',$user->id)
+            ->where('checked','=',0)
+            ->orderBy('id','DESC')
+            ->limit(5)
+            ->get();
+        $not_count = DB::table('notifications')
+            ->where('receiver_id','=',$user->id)
+            ->where('sender_id','!=',$user->id)
+            ->where('checked','=',0)
+            ->orderBy('id','DESC')
+            ->count();
+        $activities = DB::table('notifications')
+            ->where('sender_id','=',$user->id)
+            ->where('checked','=',0)
+            ->orderBy('id','DESC')
+            ->limit(5)
+            ->get();
         $frs= User::all();
-        return view('tests.addQuestionForm',['levels'=>$levels,'subjects'=>$subjects,'frs'=>$frs]);
+        return view('tests.addQuestionForm', compact('frs','notifications','not_count','activities','user','levels','subjects'));
+
+
     }
 
     /**
@@ -86,6 +151,28 @@ class TestController extends Controller
     public function addQuestion(Request $request)
     {
         $user_id = Auth::user()->id;
+        $user = Auth::user();
+        $notifications = DB::table('notifications')
+            ->where('receiver_id','=',$user->id)
+            ->where('sender_id','!=',$user->id)
+            ->where('checked','=',0)
+            ->orderBy('id','DESC')
+            ->limit(5)
+            ->get();
+        $not_count = DB::table('notifications')
+            ->where('receiver_id','=',$user->id)
+            ->where('sender_id','!=',$user->id)
+            ->where('checked','=',0)
+            ->orderBy('id','DESC')
+            ->count();
+        $activities = DB::table('notifications')
+            ->where('sender_id','=',$user->id)
+            ->where('checked','=',0)
+            ->orderBy('id','DESC')
+            ->limit(5)
+            ->get();
+        $frs= User::all();
+
         $level_id = $request->input('testlvl_id');
         $subject_id = $request->input('testsubject_id');
         $question = $request->input('question');
@@ -109,8 +196,7 @@ class TestController extends Controller
         DB::table('answers')->insert(
             ['question_id' => $question_id, 'content' => $answer, 'is_correct' => 1]
         );
-        $frs= User::all();
-        return view('tests.addQuestionResult',compact('frs'));
+        return view('tests.addQuestionResult', compact('frs','notifications','not_count','activities','user'));
     }
 
     /**
@@ -147,9 +233,28 @@ class TestController extends Controller
         DB::table('results')->insert(
             ['user_id'=>$user_id,'subject_id'=>$subject_id,'level_id'=>$level_id,'result'=>$p,'timetest'=>$timetest]
         );
+        $user = Auth::user();
+        $notifications = DB::table('notifications')
+            ->where('receiver_id','=',$user->id)
+            ->where('sender_id','!=',$user->id)
+            ->where('checked','=',0)
+            ->orderBy('id','DESC')
+            ->limit(5)
+            ->get();
+        $not_count = DB::table('notifications')
+            ->where('receiver_id','=',$user->id)
+            ->where('sender_id','!=',$user->id)
+            ->where('checked','=',0)
+            ->orderBy('id','DESC')
+            ->count();
+        $activities = DB::table('notifications')
+            ->where('sender_id','=',$user->id)
+            ->where('checked','=',0)
+            ->orderBy('id','DESC')
+            ->limit(5)
+            ->get();
         $frs= User::all();
-
-        return view('tests.result',['p'=>$p,'timetest'=>$timetest,'frs'=>$frs]);
+        return view('tests.result', compact('frs','notifications','not_count','activities','user','levels','subjects','p','timetest'));
     }
 
     /**

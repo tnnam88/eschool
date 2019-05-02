@@ -71,4 +71,3 @@ Route::get('/activity','NotifyController@showact');
 Route::post('/activity/load','NotifyController@activity')->name('activity');
 
 //Testing route
-Route::get('/5post','PostController@index5');
