@@ -5,6 +5,7 @@
  * Date: 4/24/2019
  * Time: 10:36 PM
  */
+use Illuminate\Support\Carbon;
 ?>
 <div class="col-lg-3">
     <aside class="sidebar static">
@@ -45,7 +46,14 @@
                 </li>
                 <li>
                     <i class="ti-bell"></i>
-                    <a href="notifications.html" title="">Notifications</a>
+                    <a href="{{ route('notifications') }}"
+                       onclick="event.preventDefault();
+                   document.getElementById('notify-shortcut').submit();">
+                        {{ __('Notifications') }}
+                    </a>
+                    <form id="notify-shortcut" action="{{ route('notifications') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
                 </li>
                 <li>
                     <i class="fa fa-bar-chart-o"></i>
@@ -62,28 +70,38 @@
             </ul>
         </div><!-- Shortcuts -->
         <div class="widget">
-            <h4 class="widget-title">Recent Activity</h4>
+            <a href="{{url('activity')}}" <h4 class="widget-title">Recent Activity</h4></a>
             <ul class="activitiez">
-                <li>
-                    <div class="activity-meta">
-                        <i>10 hours Ago</i>
-                        <span><a href="#" title="">Commented on Video posted </a></span>
-                        <h6>by <a href="time-line.html">black demon.</a></h6>
-                    </div>
-                </li>
-                <li>
-                    <div class="activity-meta">
-                        <i>30 Days Ago</i>
-                        <span><a href="#" title="">Posted your status. “Hello guys, how are you?”</a></span>
-                    </div>
-                </li>
-                <li>
-                    <div class="activity-meta">
-                        <i>2 Years Ago</i>
-                        <span><a href="#" title="">Share a video on her timeline.</a></span>
-                        <h6>"<a href="#">you are so funny mr.been.</a>"</h6>
-                    </div>
-                </li>
+                @foreach($activities as $activy)
+                    @php
+                        $check = DB::table('users')
+                            ->where('id','=',$activy->receiver_id)
+                            ->exists();
+                        if(!$check)
+                        {
+                            $receiver_info ='yourself';
+                        }
+                        else
+                        {
+                            $receiver = DB::table('users')
+                            ->where('id','=',$activy->receiver_id)
+                            ->first();
+                            $receiver_info =$receiver->name;
+                        }
+                        $car = new Carbon($activy->updated_at);
+                        $dif = $car->diffForHumans();
+
+
+                    @endphp
+                    <li>
+                        <div class="activity-meta">
+                            <i>{{$dif}}</i>
+                            <span>{{$activy->content}} <create></span>
+                            <h6>: <a href="">{{$receiver_info}}</a></h6>
+                        </div>
+                    </li>
+
+                @endforeach
             </ul>
         </div><!-- recent activites -->
         <div class="widget stick-widget">

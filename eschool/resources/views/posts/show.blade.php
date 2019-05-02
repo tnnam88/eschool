@@ -129,13 +129,12 @@ $avatar = Auth::user()->filename;
                                                             <img src="{{url('avatars/'.$avatar)}}" alt="">
                                                         </div>
                                                         <div class="post-comt-box">
-                                                            <form method="post" action={{url('comment/store')}}>
 
                                                                 <input type="hidden" id="post-id-comment" name="post_id" value="'.$post->id.'">
-                                                                <textarea  placeholder="Post your comment" required="required" name="content"></textarea>
-                                                                <button type="submit">Comment</button>
+                                                                <textarea id="{{'addcmt'.$post->id}}" placeholder="Post your comment" required="required" name="content"></textarea>
+                                                                <button data-p="{{$post->id}}" type="submit" class="new-cmt">Comment</button>
 
-                                                            </form>
+
                                                         </div>
                                                     </li>
                                                     <li>
@@ -176,7 +175,49 @@ $avatar = Auth::user()->filename;
         var _token = $('input[name="_token"]').val();
 
 
-        function load_cmt(id="", post_id, _token)
+        {{--function load_cmt(id="", post_id, _token)--}}
+        {{--{--}}
+            {{--$.ajax({--}}
+                {{--url:"{{ route('loadcmt') }}",--}}
+                {{--method:"POST",--}}
+                {{--data:{id:id, post_id:post_id, _token:_token},--}}
+                {{--success:function(data)--}}
+                {{--{--}}
+                    {{--$('#load_more_cmt'+post_id).remove();--}}
+                    {{--$('#post-cmt'+post_id).append(data);--}}
+                    {{--console.log(data);--}}
+                {{--}--}}
+            {{--});--}}
+        {{--}--}}
+
+        {{--$(document).on('click', '.load_more_cmt', function(){--}}
+            {{--var id = $(this).data('id');--}}
+            {{--var post_id = $(this).data('post');--}}
+            {{--$(this).html('<b>Loading...</b>');--}}
+            {{--load_cmt(id,post_id, _token);--}}
+        {{--});--}}
+
+        {{--function changelike(user_id="",cmt_id="",_token) {--}}
+            {{--$.ajax({--}}
+                {{--url:"{{route('changelike')}}",--}}
+                {{--method:"POST",--}}
+                {{--data:{user_id:user_id,cmt_id: cmt_id,_token:_token},--}}
+                {{--success:function(data)--}}
+                {{--{--}}
+                    {{--$('#changelike'+cmt_id).html("");--}}
+                    {{--$('#changelike'+cmt_id).append(data);--}}
+                {{--}--}}
+            {{--});--}}
+        {{--}--}}
+
+
+        {{--$(document).on('click','.changelike',function () {--}}
+            {{--var user_id = $(this).data('like_user');--}}
+            {{--var cmt_id = $(this).data('like_cmt');--}}
+            {{--changelike(user_id,cmt_id,_token);--}}
+
+        {{--});--}}
+        function load_cmt(id="", post_id="", _token)
         {
             $.ajax({
                 url:"{{ route('loadcmt') }}",
@@ -185,8 +226,9 @@ $avatar = Auth::user()->filename;
                 success:function(data)
                 {
                     $('#load_more_cmt'+post_id).remove();
+                    // $('#new-cmt'+post_id).data('last_cmt')=
                     $('#post-cmt'+post_id).append(data);
-                    console.log(data);
+
                 }
             });
         }
@@ -207,6 +249,7 @@ $avatar = Auth::user()->filename;
                 {
                     $('#changelike'+cmt_id).html("");
                     $('#changelike'+cmt_id).append(data);
+                    console.log(data);
                 }
             });
         }
@@ -216,6 +259,43 @@ $avatar = Auth::user()->filename;
             var user_id = $(this).data('like_user');
             var cmt_id = $(this).data('like_cmt');
             changelike(user_id,cmt_id,_token);
+
+        });
+
+
+        function cmt(post_id="",top_cmt="",content="",_token) {
+            $.ajax({
+                url:"{{route('comment')}}",
+                method:"POST",
+                data:{post_id:post_id,top_cmt: top_cmt,content:content,_token:_token},
+                success:function(data)
+                {
+                    $('.alert-cmt').remove();
+                    $('#addcmt'+post_id).val('');
+                    $('#load_more_cmt'+post_id).remove();
+                    $('#post-cmt'+post_id+' li:nth-child(2)').after(data);
+
+                }
+            });
+        }
+
+
+        $(document).on('click','.new-cmt',function () {
+
+            var post_id = $(this).data('p');
+            var top_cmt = $('#post-cmt'+post_id+' li:nth-child(3)').data('cmt');
+            var content = $('#addcmt'+post_id).val();
+            if($('#addcmt'+post_id).val().length == 0)
+            {
+                alert("Plz Enter comment!");
+                $('#addcmt'+post_id).after('<div class="alert alert-danger alert-cmt">\n' +
+                    '  <strong>!!!</strong> Plz Enter Comment!\n' +
+                    '</div>')
+
+            }
+            else {
+                cmt(post_id,top_cmt,content,_token);
+            }
 
         });
 

@@ -20,12 +20,14 @@ Route::get('/home', 'HomeController@index')->name('home');
 /*Post*/
 Route::get('/loadpost', 'PostController@index')->middleware('auth');
 Route::post('/loadpost/loadmore','PostController@loadpost')->name('loadpost');
+Route::post('/post','PostController@store')->name('posts');
+Route::get('/allpost','PostController@manager');
 
 Route::get('/post/show/{id}', 'PostController@showpost')->name('posts.show');
 Route::get('/wall/{user_id}','PostController@wall')->middleware('auth');
 Route::post('/wall/loadmore','PostController@wallpost')->name('wall');
 
-Route::post('/comment/store', 'CommentController@store')->name('comment.add');
+Route::post('/comment', 'PostController@postcmt')->name('comment');
 Route::post('/comment/like', 'CommentController@like')->name('comment.like');
 Route::post('/loadcomment/loadmore','PostController@loadcomment')->name('loadcmt');
 Route::post('/changelike', 'CommentController@changelike')->name('changelike');
@@ -61,3 +63,12 @@ Route::get('/showmark', 'ShowProfileController@showmark')->name('showmark');
 Route::get('/changePassword','HomeController@showChangePasswordForm')->name('showChange');
 
 Route::post('/changePassword','HomeController@changePassword')->name('changePassword');
+
+//Notification
+Route::post('/notify','NotifyController@shownotify')->name('notifications');
+Route::post('/notify/load','NotifyController@notify')->name('notify');
+Route::get('/activity','NotifyController@showact');
+Route::post('/activity/load','NotifyController@activity')->name('activity');
+
+//Testing route
+Route::get('/5post','PostController@index5');

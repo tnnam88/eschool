@@ -2,6 +2,7 @@
 
 // import the Intervention Image Manager Class
 use Intervention\Image\ImageManagerStatic as Image;
+use Illuminate\Support\Carbon;
 
 
 ?>
@@ -184,134 +185,102 @@ use Intervention\Image\ImageManagerStatic as Image;
             </li>
             <li>
                 <a href="#" title="Notification" data-ripple="">
-                    <i class="ti-bell"></i><span>20</span>
+                    <i class="fa fa-bell-o" aria-hidden="true"></i>
+                    <span>{{$not_count}}</span>
                 </a>
                 <div class="dropdowns">
-                    <span>4 New Notifications</span>
+                    <span>{{$not_count}} New Notifications</span>
                     <ul class="drops-menu">
-                        <li>
-                            <a href="notifications.html" title="">
-                                <img src={{asset('images/resources/thumb-1.jpg')}} alt="">
-                                <div class="mesg-meta">
-                                    <h6>sarah Loren</h6>
-                                    <span>Hi, how r u dear ...?</span>
-                                    <i>2 min ago</i>
-                                </div>
-                            </a>
-                            <span class="tag green">New</span>
-                        </li>
-                        <li>
-                            <a href="notifications.html" title="">
-                                <img src={{asset('images/resources/thumb-2.jpg')}} alt="">
-                                <div class="mesg-meta">
-                                    <h6>Jhon doe</h6>
-                                    <span>Hi, how r u dear ...?</span>
-                                    <i>2 min ago</i>
-                                </div>
-                            </a>
-                            <span class="tag red">Reply</span>
-                        </li>
-                        <li>
-                            <a href="notifications.html" title="">
-                                <img src={{asset('images/resources/thumb-3.jpg')}} alt="">
-                                <div class="mesg-meta">
-                                    <h6>Andrew</h6>
-                                    <span>Hi, how r u dear ...?</span>
-                                    <i>2 min ago</i>
-                                </div>
-                            </a>
-                            <span class="tag blue">Unseen</span>
-                        </li>
-                        <li>
-                            <a href="notifications.html" title="">
-                                <img src={{asset('images/resources/thumb-4.jpg')}} alt="">
-                                <div class="mesg-meta">
-                                    <h6>Tom cruse</h6>
-                                    <span>Hi, how r u dear ...?</span>
-                                    <i>2 min ago</i>
-                                </div>
-                            </a>
-                            <span class="tag">New</span>
-                        </li>
-                        <li>
-                            <a href="notifications.html" title="">
-                                <img src={{asset('images/resources/thumb-5.jpg')}} alt="">
-                                <div class="mesg-meta">
-                                    <h6>Amy</h6>
-                                    <span>Hi, how r u dear ...?</span>
-                                    <i>2 min ago</i>
-                                </div>
-                            </a>
-                            <span class="tag">New</span>
-                        </li>
+                        @foreach($notifications as $notify)
+                            @php
+                                $sender = DB::table('users')
+                                    ->where('id','=',$notify->sender_id)
+                                    ->first();
+                                $car = new Carbon($notify->updated_at);
+                                $dif = $car->diffForHumans();
+
+                            @endphp
+                            <li>
+                                <a href="{{url('notify')}}" title="">
+                                    <img src={{url('avatars/'.$sender->filename)}} alt="">
+                                    <div class="mesg-meta">
+                                        <h6>{{$sender->name}}</h6>
+                                        <span>{{$notify->content}}</span>
+                                        <i>{{$dif}}</i>
+                                    </div>
+                                </a>
+                                <span class="tag green">New</span>
+                            </li>
+                        @endforeach
+                        {{--<li>--}}
+                            {{--<a href="notifications.html" title="">--}}
+                                {{--<img src={{asset('images/resources/thumb-1.jpg')}} alt="">--}}
+                                {{--<div class="mesg-meta">--}}
+                                    {{--<h6>sarah Loren</h6>--}}
+                                    {{--<span>Hi, how r u dear ...?</span>--}}
+                                    {{--<i>2 min ago</i>--}}
+                                {{--</div>--}}
+                            {{--</a>--}}
+                            {{--<span class="tag green">New</span>--}}
+                        {{--</li>--}}
+                        {{--<li>--}}
+                            {{--<a href="notifications.html" title="">--}}
+                                {{--<img src={{asset('images/resources/thumb-2.jpg')}} alt="">--}}
+                                {{--<div class="mesg-meta">--}}
+                                    {{--<h6>Jhon doe</h6>--}}
+                                    {{--<span>Hi, how r u dear ...?</span>--}}
+                                    {{--<i>2 min ago</i>--}}
+                                {{--</div>--}}
+                            {{--</a>--}}
+                            {{--<span class="tag red">Reply</span>--}}
+                        {{--</li>--}}
+                        {{--<li>--}}
+                            {{--<a href="notifications.html" title="">--}}
+                                {{--<img src={{asset('images/resources/thumb-3.jpg')}} alt="">--}}
+                                {{--<div class="mesg-meta">--}}
+                                    {{--<h6>Andrew</h6>--}}
+                                    {{--<span>Hi, how r u dear ...?</span>--}}
+                                    {{--<i>2 min ago</i>--}}
+                                {{--</div>--}}
+                            {{--</a>--}}
+                            {{--<span class="tag blue">Unseen</span>--}}
+                        {{--</li>--}}
+                        {{--<li>--}}
+                            {{--<a href="notifications.html" title="">--}}
+                                {{--<img src={{asset('images/resources/thumb-4.jpg')}} alt="">--}}
+                                {{--<div class="mesg-meta">--}}
+                                    {{--<h6>Tom cruse</h6>--}}
+                                    {{--<span>Hi, how r u dear ...?</span>--}}
+                                    {{--<i>2 min ago</i>--}}
+                                {{--</div>--}}
+                            {{--</a>--}}
+                            {{--<span class="tag">New</span>--}}
+                        {{--</li>--}}
+                        {{--<li>--}}
+                            {{--<a href="notifications.html" title="">--}}
+                                {{--<img src={{asset('images/resources/thumb-5.jpg')}} alt="">--}}
+                                {{--<div class="mesg-meta">--}}
+                                    {{--<h6>Amy</h6>--}}
+                                    {{--<span>Hi, how r u dear ...?</span>--}}
+                                    {{--<i>2 min ago</i>--}}
+                                {{--</div>--}}
+                            {{--</a>--}}
+                            {{--<span class="tag">New</span>--}}
+                        {{--</li>--}}
                     </ul>
-                    <a href="notifications.html" title="" class="more-mesg">view more</a>
+                    <a href="{{ route('notify') }}"
+                       class="more-mesg"
+                       onclick="event.preventDefault();
+                   document.getElementById('notifications').submit();">
+                        <i class="ti-bell"></i>
+                        {{ __('View more') }}
+                    </a>
+                    <form id="notifications" action="{{ route('notifications') }}" method="POST">
+                        @csrf
+                    </form>
                 </div>
             </li>
-            <li>
-                <a href="#" title="Messages" data-ripple=""><i class="ti-comment"></i><span>12</span></a>
-                <div class="dropdowns">
-                    <span>5 New Messages</span>
-                    <ul class="drops-menu">
-                        <li>
-                            <a href="notifications.html" title="">
-                                <img src={{asset('images/resources/thumb-1.jpg')}} alt="">
-                                <div class="mesg-meta">
-                                    <h6>sarah Loren</h6>
-                                    <span>Hi, how r u dear ...?</span>
-                                    <i>2 min ago</i>
-                                </div>
-                            </a>
-                            <span class="tag green">New</span>
-                        </li>
-                        <li>
-                            <a href="notifications.html" title="">
-                                <img src={{asset('images/resources/thumb-2.jpg')}} alt="">
-                                <div class="mesg-meta">
-                                    <h6>Jhon doe</h6>
-                                    <span>Hi, how r u dear ...?</span>
-                                    <i>2 min ago</i>
-                                </div>
-                            </a>
-                            <span class="tag red">Reply</span>
-                        </li>
-                        <li>
-                            <a href="notifications.html" title="">
-                                <img src={{asset('images/resources/thumb-3.jpg')}} alt="">
-                                <div class="mesg-meta">
-                                    <h6>Andrew</h6>
-                                    <span>Hi, how r u dear ...?</span>
-                                    <i>2 min ago</i>
-                                </div>
-                            </a>
-                            <span class="tag blue">Unseen</span>
-                        </li>
-                        <li>
-                            <a href="notifications.html" title="">
-                                <img src={{asset('images/resources/thumb-4.jpg')}} alt="">
-                                <div class="mesg-meta">
-                                    <h6>Tom cruse</h6>
-                                    <span>Hi, how r u dear ...?</span>
-                                    <i>2 min ago</i>
-                                </div>
-                            </a>
-                            <span class="tag">New</span>
-                        </li>
-                        <li>
-                            <a href="notifications.html" title="">
-                                <img src={{asset('images/resources/thumb-5.jpg')}} alt="">
-                                <div class="mesg-meta">
-                                    <h6>Amy</h6>
-                                    <span>Hi, how r u dear ...?</span>
-                                    <i>2 min ago</i>
-                                </div>
-                            </a>
-                            <span class="tag">New</span>
-                        </li>
-                    </ul>
-                    <a href="messages.html" title="" class="more-mesg">view more</a>
-                </div>
-            </li>
+
             <li><a href="#" title="Languages" data-ripple=""><i class="fa fa-globe"></i></a>
                 <div class="dropdowns languages">
                     <a href="#" title=""><i class="ti-check"></i>English</a>

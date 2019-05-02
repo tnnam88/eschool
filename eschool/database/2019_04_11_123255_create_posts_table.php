@@ -20,6 +20,8 @@ class CreatePostsTable extends Migration
             $table->smallInteger('level_id')->nullable();
             $table->string('title');
             $table->string('content');
+            $table->unsignedInteger('subject_id');
+            $table->unsignedInteger('level_id');
 
             $table->string('filename')->nullable();
             $table->string('mime')->nullable();

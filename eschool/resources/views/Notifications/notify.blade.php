@@ -29,7 +29,7 @@
 <!--<div class="se-pre-con"></div>-->
 <div class="theme-layout">
 
-    @include('layouts.header')<!-- responsive header -->
+@include('layouts.header')<!-- responsive header -->
 
     <section>
         <div class="feature-photo">
@@ -51,8 +51,7 @@
                     <div class="col-lg-2 col-sm-3">
                         <div class="user-avatar">
                             <?php
-                                $wall_user = App\User::where('id',$wall_id)->first();
-                                $wall_avatar = $wall_user->filename;
+                            $wall_avatar = $user->filename;
                             ?>
                             <figure class="wall-avatar">
                                 <img src="{{asset('avatars/'.$wall_avatar)}}" alt="">
@@ -70,8 +69,8 @@
                         <div class="timeline-info">
                             <ul>
                                 <li class="admin-name">
-                                    <h5>{{$wall_user->name}}</h5>
-                                    <span>{{$wall_user->role}}</span>
+                                    <h5>{{$user->name}}</h5>
+                                    <span>{{$user->role}}</span>
                                 </li>
                                 <li>
                                     <a class="active" href="time-line.html" title="" data-ripple="">time line</a>
@@ -90,32 +89,36 @@
         </div>
     </section><!-- top area -->
     <section><!-- main web-->
-            <div class="gap gray-bg">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="row" id="page-contents">
-                            @include('layouts.lsidebar')<!-- lsidebar -->
-                                <div class="col-lg-6"><!-- center -->
+        <div class="gap gray-bg">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row" id="page-contents">
+                        @include('layouts.lsidebar')<!-- lsidebar -->
+                            <div class="col-lg-6"><!-- center -->
+                                <div class="central-meta">
+                                    <div class="editing-interest">
+                                        <h5 class="f-title"><i class="ti-bell"></i>All Notifications </h5>
+                                        <div class="notification-box">
+                                            {{ csrf_field() }}
+                                            <ul class="loadMore" id="post_data" data-wall="{{$user->id}}">
 
-                                    {{ csrf_field() }}
-                                    <div class="loadMore" id="post_data" data-wall="{{$wall_id}}"><!-- post & cmd -->
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
 
 
-
-
-                                    </div><!-- post & cmd -->
-
-                                </div><!-- center-->
-                            @include('layouts.rsidebar')<!-- rsidebar -->
-                            </div>
+                            </div><!-- center-->
+                        @include('layouts.rsidebar')<!-- rsidebar -->
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-    @include('layouts.footer')<!-- responsive footer -->
+@include('layouts.footer')<!-- responsive footer -->
 </div>
 @include('layouts.side-panel')<!-- side panel -->
 
@@ -127,16 +130,15 @@
     $(document).ready(function(){
 
         var _token = $('input[name="_token"]').val();
-        wall_user_id={{$wall_id}};
-        load_data('',wall_user_id, _token);
 
+        load_data('', _token);
 
-        function load_data(id="",wall_user_id='', _token)
+        function load_data(id="", _token)
         {
             $.ajax({
-                url:"{{ route('wall') }}",
+                url:"{{ route('notify') }}",
                 method:"POST",
-                data:{id:id,wall_user_id:wall_user_id, _token:_token},
+                data:{id:id, _token:_token},
                 success:function(data)
                 {
                     $('#load_more_button').remove();
@@ -148,96 +150,8 @@
         $(document).on('click', '#load_more_button', function(){
             var id = $(this).data('id');
             $('#load_more_button').html('<b>Loading...</b>');
-            load_data(id,wall_user_id, _token);
+            load_data(id, _token);
         });
-
-        function load_cmt(id="", post_id="", _token)
-        {
-            $.ajax({
-                url:"{{ route('loadcmt') }}",
-                method:"POST",
-                data:{id:id, post_id:post_id, _token:_token},
-                success:function(data)
-                {
-                    $('#load_more_cmt'+post_id).remove();
-                    // $('#new-cmt'+post_id).data('last_cmt')=
-                    $('#post-cmt'+post_id).append(data);
-
-                }
-            });
-        }
-
-        $(document).on('click', '.load_more_cmt', function(){
-            var id = $(this).data('id');
-            var post_id = $(this).data('post');
-            $(this).html('<b>Loading...</b>');
-            load_cmt(id,post_id, _token);
-        });
-
-        function changelike(user_id="",cmt_id="",_token) {
-            $.ajax({
-                url:"{{route('changelike')}}",
-                method:"POST",
-                data:{user_id:user_id,cmt_id: cmt_id,_token:_token},
-                success:function(data)
-                {
-                    $('#changelike'+cmt_id).html("");
-                    $('#changelike'+cmt_id).append(data);
-                    console.log(data);
-                }
-            });
-        }
-
-
-        $(document).on('click','.changelike',function () {
-            var user_id = $(this).data('like_user');
-            var cmt_id = $(this).data('like_cmt');
-            changelike(user_id,cmt_id,_token);
-
-        });
-
-
-        function cmt(post_id="",top_cmt="",content="",_token) {
-            $.ajax({
-                url:"{{route('comment')}}",
-                method:"POST",
-                data:{post_id:post_id,top_cmt: top_cmt,content:content,_token:_token},
-                success:function(data)
-                {
-                    $('.alert-cmt').remove();
-                    $('#addcmt'+post_id).val('');
-                    $('#load_more_cmt'+post_id).remove();
-                    $('#post-cmt'+post_id+' li:nth-child(2)').after(data);
-
-                }
-            });
-        }
-
-
-        $(document).on('click','.new-cmt',function () {
-
-            var post_id = $(this).data('p');
-            var top_cmt = $('#post-cmt'+post_id+' li:nth-child(3)').data('cmt');
-            var content = $('#addcmt'+post_id).val();
-            if($('#addcmt'+post_id).val().length == 0)
-            {
-                alert("Plz Enter comment!");
-                $('#addcmt'+post_id).after('<div class="alert alert-danger alert-cmt">\n' +
-                    '  <strong>!!!</strong> Plz Enter Comment!\n' +
-                    '</div>')
-
-            }
-            else {
-                cmt(post_id,top_cmt,content,_token);
-            }
-
-        });
-
-
-
-
-
-
 
     });
 </script><!-- ajax -->

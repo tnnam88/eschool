@@ -8,6 +8,7 @@ use App\Comment;
 use Illuminate\Support\Facades\Auth;
 use App\Post;
 use App\Like;
+use App\Notification;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 class CommentController extends Controller
@@ -125,12 +126,19 @@ class CommentController extends Controller
 
     public function changelike(Request $request)
     {
+        $user = Auth::user();
         if($request->ajax())
         {
+            $post_id = DB::table('comments')
+                ->where('id','=',$request->cmt_id)
+                ->first()->post_id;
+            $receiver = DB::table('comments')
+                ->where('id','=',$request->cmt_id)
+                ->first()->user_id;
             $output="";
             $like_count ="";
             $check_like=DB::table('likes')
-                ->where('user_id','=',$request->user_id)
+                ->where('user_id','=',$user->id)
                 ->where('comment_id','=',$request->cmt_id)
                 ->delete();
             if($check_like)
@@ -138,6 +146,14 @@ class CommentController extends Controller
                 $like_count = DB::table('likes')
                     ->where('comment_id','=',$request->cmt_id)
                     ->count();
+
+                $notify = new Notification;
+                $notify->sender_id = Auth::user()->id;
+                $notify->receiver_id = $receiver;
+                $notify->post_id = $post_id;
+                $notify->comment_id = $request->cmt_id;
+                $notify->content = 'UnLike a Comment ';
+                $notify->save();
 
                 $output .= '
                     <ins>'.$like_count.'</ins>
@@ -152,8 +168,21 @@ class CommentController extends Controller
             }
             else
             {
-                Db::table('likes')
-                    ->insert(['user_id'=>$request->user_id,'comment_id'=>$request->cmt_id]);
+                $like = new Like;
+                $like->user_id = $user->id;
+                $like->comment_id = $request->cmt_id;
+                $like->save();
+
+
+                $notify = new Notification;
+                $notify->sender_id = Auth::user()->id;
+                $notify->receiver_id = $receiver;
+                $notify->post_id = $post_id;
+                $notify->comment_id = $request->cmt_id;
+                $notify->content = 'Like a Commented ';
+                $notify->save();
+
+
 
                 $like_count = DB::table('likes')
                     ->where('comment_id','=',$request->cmt_id)

@@ -63,6 +63,7 @@ body {
     width: 100%;
     margin: 0;
     padding: 0;
+    font-size: 2rem;
     overflow-x: hidden;
     color: #545454;
 }
@@ -4771,11 +4772,11 @@ canvas {
     text-align: left;
 }
 
-.chat-box.show {
-    transform: translate(0) scale(1);
-    opacity: 1;
-    visibility: visible;
-}
+/*.chat-box.show {*/
+    /*transform: translate(0) scale(1);*/
+    /*opacity: 1;*/
+    /*visibility: visible;*/
+/*}*/
 
 .chat-head {
     color: #fff;

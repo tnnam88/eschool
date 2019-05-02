@@ -2,6 +2,8 @@
     use App\Post;
     // import the Intervention Image Manager Class
     use Intervention\Image\ImageManagerStatic as Image;
+    use Illuminate\Support\Carbon;
+    use Illuminate\Support\Facades\DB;
 
 
 ?>
@@ -60,7 +62,7 @@
                                             </figure>
                                             <div class="newpst-input">
 
-                                                <form method="post" action="{{url('posts')}}" enctype="multipart/form-data" >
+                                                <form method="post" action="{{url('post')}}" enctype="multipart/form-data" >
                                                     @csrf
                                                     <textarea rows="1" placeholder="Title" name="title"></textarea>
                                                     <textarea rows="2" placeholder="Write something" name="content"></textarea>
@@ -129,6 +131,9 @@
             </div>
         </div>
     </section>
+        <div id="auto10">
+
+        </div>
 
     @include('layouts.footer')<!-- responsive footer -->
 </div>
@@ -176,8 +181,9 @@
                 success:function(data)
                 {
                     $('#load_more_cmt'+post_id).remove();
+                    // $('#new-cmt'+post_id).data('last_cmt')=
                     $('#post-cmt'+post_id).append(data);
-                    console.log(data);
+
                 }
             });
         }
@@ -198,6 +204,7 @@
                 {
                     $('#changelike'+cmt_id).html("");
                     $('#changelike'+cmt_id).append(data);
+                    console.log(data);
                 }
             });
         }
@@ -209,6 +216,46 @@
             changelike(user_id,cmt_id,_token);
 
         });
+
+
+        function cmt(post_id="",top_cmt="",content="",_token) {
+            $.ajax({
+                url:"{{route('comment')}}",
+                method:"POST",
+                data:{post_id:post_id,top_cmt: top_cmt,content:content,_token:_token},
+                success:function(data)
+                {
+                    $('.alert-cmt').remove();
+                    $('#addcmt'+post_id).val('');
+                    $('#load_more_cmt'+post_id).remove();
+                    $('#post-cmt'+post_id+' li:nth-child(2)').after(data);
+
+                }
+            });
+        }
+
+
+        $(document).on('click','.new-cmt',function () {
+
+            var post_id = $(this).data('p');
+            var top_cmt = $('#post-cmt'+post_id+' li:nth-child(3)').data('cmt');
+            var content = $('#addcmt'+post_id).val();
+            if($('#addcmt'+post_id).val().length == 0)
+            {
+                alert("Plz Enter comment!");
+                $('#addcmt'+post_id).after('<div class="alert alert-danger alert-cmt">\n' +
+                    '  <strong>!!!</strong> Plz Enter Comment!\n' +
+                    '</div>')
+
+            }
+            else {
+                cmt(post_id,top_cmt,content,_token);
+            }
+
+        });
+
+
+
 
 
 
