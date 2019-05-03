@@ -1,10 +1,26 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: The Doctor
- * Date: 4/24/2019
- * Time: 10:37 PM
- */
+        use App\Post;
+        use App\Comment;
+        use App\Like;
+$posts = Post::latest()->take(5)->get();
+$id = \Auth::user()->id;
+$recents = Post::where('user_id', '=', $id)->latest()->take(5)->get();
+$posts_count = Post::where('user_id', '=', $id)->count();
+$comment_count = Comment:: where('user_id', '=', $id)->count();
+// Count all likes that an user received over time
+$cmtbyid = Comment:: where('user_id', '=', $id)->get();
+$like_all = 0;
+foreach ($cmtbyid as $cmt) {
+    $like_all += Like::where('comment_id', '=', $cmt->id)->count();
+}
+//Count only likes that an user received last 7 days
+$date = \Carbon\Carbon::today()->subDays(7);
+$cmtweek = Comment::where('user_id', '=', $id)->where('created_at', '>=', $date)->get();
+$like_week = 0;
+foreach ($cmtweek as $cmt) {
+    $like_week += Like::where('comment_id', '=', $cmt->id)->count();
+}
+
 ?>
 <div class="col-lg-3">
     <aside class="sidebar static">
@@ -12,71 +28,74 @@
             <h4 class="widget-title">Your page</h4>
             <div class="your-page">
                 <figure>
-                    <a href="#" title=""><img src={{asset('images/resources/friend-avatar9.jpg')}} alt=""></a>
+                    <?php
+                    $avatar = Auth::user()->filename;
+                    ?>
+                    <img src="{{url('avatars/'.$avatar)}}" alt="{{$avatar}}">
                 </figure>
                 <div class="page-meta">
-                    <a href="#" title="" class="underline">My page</a>
-                    <span><i class="ti-comment"></i><a href="insight.html" title="">Messages <em>9</em></a></span>
-                    <span><i class="ti-bell"></i><a href="insight.html" title="">Notifications <em>2</em></a></span>
+                    <a href="#" title="" class="underline">{{Auth::user()->name}}</a>
+                    <span><i class="ti-comment"></i><a href="insight.html" title="">Posts <em>{{$posts_count}}</em></a></span>
+                    <span><i class="ti-bell"></i><a href="insight.html" title="">Comments <em>{{$comment_count}}</em></a></span>
                 </div>
                 <div class="page-likes">
                     <ul class="nav nav-tabs likes-btn">
-                        <li class="nav-item"><a class="active" href="#link1" data-toggle="tab">likes</a></li>
-                        <li class="nav-item"><a class="" href="#link2" data-toggle="tab">views</a></li>
+                        <li class="nav-item"><a class="active" href="#link1" data-toggle="tab">this week</a></li>
+                        <li class="nav-item"><a class="" href="#link2" data-toggle="tab">all time</a></li>
                     </ul>
                     <!-- Tab panes -->
                     <div class="tab-content">
                         <div class="tab-pane active fade show " id="link1" >
-                            <span><i class="ti-heart"></i>884</span>
-                            <a href="#" title="weekly-likes">35 new likes this week</a>
+                            <span><i class="ti-heart"></i>{{$like_week}}</span>
+                            <a href="#" title="weekly-likes">{{$like_week}} new likes this week</a>
                             <div class="users-thumb-list">
                                 <a href="#" title="Anderw" data-toggle="tooltip">
-                                    <img src={{asset('images/resources/userlist-1.jpg')}} alt="">
+                                    <img src="images/resources/userlist-1.jpg" alt="">
                                 </a>
                                 <a href="#" title="frank" data-toggle="tooltip">
-                                    <img src={{asset('images/resources/userlist-2.jpg')}} alt="">
+                                    <img src="images/resources/userlist-2.jpg" alt="">
                                 </a>
                                 <a href="#" title="Sara" data-toggle="tooltip">
-                                    <img src={{asset('images/resources/userlist-3.jpg')}} alt="">
+                                    <img src="images/resources/userlist-3.jpg" alt="">
                                 </a>
                                 <a href="#" title="Amy" data-toggle="tooltip">
-                                    <img src={{asset('images/resources/userlist-4.jpg')}} alt="">
+                                    <img src="images/resources/userlist-4.jpg" alt="">
                                 </a>
                                 <a href="#" title="Ema" data-toggle="tooltip">
-                                    <img src={{asset('images/resources/userlist-5.jpg')}} alt="">
+                                    <img src="images/resources/userlist-5.jpg" alt="">
                                 </a>
                                 <a href="#" title="Sophie" data-toggle="tooltip">
-                                    <img src={{asset('images/resources/userlist-6.jpg')}} alt="">
+                                    <img src="images/resources/userlist-6.jpg" alt="">
                                 </a>
                                 <a href="#" title="Maria" data-toggle="tooltip">
-                                    <img src={{asset('images/resources/userlist-7.jpg')}} alt="">
+                                    <img src="images/resources/userlist-7.jpg" alt="">
                                 </a>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="link2" >
-                            <span><i class="ti-eye"></i>440</span>
-                            <a href="#" title="weekly-likes">440 new views this week</a>
+                            <span><i class="ti-heart"></i>{{$like_all}}</span>
+                            <a href="#" title="weekly-likes">{{$like_all}} likes in total</a>
                             <div class="users-thumb-list">
                                 <a href="#" title="Anderw" data-toggle="tooltip">
-                                    <img src={{asset('images/resources/userlist-1.jpg')}} alt="">
+                                    <img src="images/resources/userlist-1.jpg" alt="">
                                 </a>
                                 <a href="#" title="frank" data-toggle="tooltip">
-                                    <img src={{asset('images/resources/userlist-2.jpg')}} alt="">
+                                    <img src="images/resources/userlist-2.jpg" alt="">
                                 </a>
                                 <a href="#" title="Sara" data-toggle="tooltip">
-                                    <img src={{asset('images/resources/userlist-3.jpg')}} alt="">
+                                    <img src="images/resources/userlist-3.jpg" alt="">
                                 </a>
                                 <a href="#" title="Amy" data-toggle="tooltip">
-                                    <img src={{asset('images/resources/userlist-4.jpg')}} alt="">
+                                    <img src="images/resources/userlist-4.jpg" alt="">
                                 </a>
                                 <a href="#" title="Ema" data-toggle="tooltip">
-                                    <img src={{asset('images/resources/userlist-5.jpg')}} alt="">
+                                    <img src="images/resources/userlist-5.jpg" alt="">
                                 </a>
                                 <a href="#" title="Sophie" data-toggle="tooltip">
-                                    <img src={{asset('images/resources/userlist-6.jpg')}} alt="">
+                                    <img src="images/resources/userlist-6.jpg" alt="">
                                 </a>
                                 <a href="#" title="Maria" data-toggle="tooltip">
-                                    <img src={{asset('images/resources/userlist-7.jpg')}} alt="">
+                                    <img src="images/resources/userlist-7.jpg" alt="">
                                 </a>
                             </div>
                         </div>
@@ -84,22 +103,7 @@
                 </div>
             </div>
         </div><!-- page like widget -->
-        <div class="widget">
-            <div class="banner medium-opacity bluesh">
-                <div class="bg-image" style="background-image: url(images/resources/baner-widgetbg.jpg)"></div>
-                <div class="baner-top">
-                    <span><img alt="" src={{asset('images/book-icon.png')}}></span>
-                    <i class="fa fa-ellipsis-h"></i>
-                </div>
-                <div class="banermeta">
-                    <p>
-                        W3Schools' Online Certification
-                    </p>
-                    <span>Lavarel Quiz</span>
-                    <a data-ripple="" title="" href="#">start now!</a>
-                </div>
-            </div>
-        </div>
+        
         <div class="widget friend-list stick-widget">
             <h4 class="widget-title">Friends</h4>
             <div id="searchDir"></div>

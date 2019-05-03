@@ -46,7 +46,7 @@ $recents = Post::where('user_id', '=', $id)->latest()->take(5)->get();
                 ?>
                 <li>
                     <i class="ti-files"></i>
-                    <a href="{{url('dotest')}}" title="">Do test</a>
+                    <a href="{{url('dotest')}}" title="">Test Yourself</a>
                 </li>
                 <?php
                 use Illuminate\Support\Facades\Auth;
@@ -73,7 +73,7 @@ $recents = Post::where('user_id', '=', $id)->latest()->take(5)->get();
                 </li>
                 <li>
                     <i class="fa fa-bar-chart-o"></i>
-                    <a href="insights.html" title="">insights</a>
+                    <a href="{{route('profiles.show')}}" title="">insights</a>
                 </li>
                 <li>
                     <i class="ti-power-off"></i>
@@ -135,45 +135,6 @@ $recents = Post::where('user_id', '=', $id)->latest()->take(5)->get();
                 @endforeach
             </ul>
         </div><!-- recent activites -->
-        <div class="widget stick-widget">
-            <h4 class="widget-title">Who's follownig</h4>
-            <ul class="followers">
-                <li>
-                    <figure><img src={{asset('images/resources/friend-avatar2.jpg')}} alt=""></figure>
-                    <div class="friend-meta">
-                        <h4><a href="time-line.html" title="">Kelly Bill</a></h4>
-                        <a href="#" title="" class="underline">Add Friend</a>
-                    </div>
-                </li>
-                <li>
-                    <figure><img src={{asset('images/resources/friend-avatar4.jpg')}} alt=""></figure>
-                    <div class="friend-meta">
-                        <h4><a href="time-line.html" title="">Issabel</a></h4>
-                        <a href="#" title="" class="underline">Add Friend</a>
-                    </div>
-                </li>
-                <li>
-                    <figure><img src={{asset('images/resources/friend-avatar6.jpg')}} alt=""></figure>
-                    <div class="friend-meta">
-                        <h4><a href="time-line.html" title="">Andrew</a></h4>
-                        <a href="#" title="" class="underline">Add Friend</a>
-                    </div>
-                </li>
-                <li>
-                    <figure><img src={{asset('images/resources/friend-avatar8.jpg')}} alt=""></figure>
-                    <div class="friend-meta">
-                        <h4><a href="time-line.html" title="">Sophia</a></h4>
-                        <a href="#" title="" class="underline">Add Friend</a>
-                    </div>
-                </li>
-                <li>
-                    <figure><img src={{asset('images/resources/friend-avatar9.jpg')}} alt=""></figure>
-                    <div class="friend-meta">
-                        <h4><a href="time-line.html" title="">Allen</a></h4>
-                        <a href="#" title="" class="underline">Add Friend</a>
-                    </div>
-                </li>
-            </ul>
-        </div><!-- who's following -->
+
     </aside>
 </div><!-- sidebar -->

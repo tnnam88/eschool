@@ -116,8 +116,9 @@ use Illuminate\Support\Carbon;
 
 <div class="topbar stick">
     <div class="logo">
-        <a title="" href={{url('/')}}><i class="fa fa-graduation-cap fa-5x" aria-hidden="true"></i>
-        </a>
+        {{--<a title="" href={{url('/')}}><i class="fa fa-graduation-cap fa-5x" aria-hidden="true"></i>--}}
+        {{--</a>--}}
+        <a href=""><img src="{{asset('images/logo.png')}}"></a>
     </div>
     <div class ="search-eshool">
             <input type="text" placeholder="Search.." name="search">

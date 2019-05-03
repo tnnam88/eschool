@@ -118,9 +118,7 @@ class AdminController extends Controller
                 $name = DB::table('users')
                     ->where('id','=',$request->acc_id)
                     ->first()->name;
-                DB::table('users')
-                    ->where('id','=',$request->acc_id)
-                    ->delete();
+
                 DB::table('posts')
                     ->where('user_id','=',$request->acc_id)
                     ->delete();
@@ -133,19 +131,23 @@ class AdminController extends Controller
                 DB::table('results')
                     ->where('user_id','=',$request->acc_id)
                     ->delete();
-                DB::table('notificatons')
+                DB::table('notifications')
                     ->where('receiver_id','=',$request->acc_id)
                     ->delete();
-                DB::table('notificatons')
+                DB::table('notifications')
                     ->where('sender_id','=',$request->acc_id)
+                    ->delete();
+                DB::table('users')
+                    ->where('id','=',$request->acc_id)
                     ->delete();
                 //notification for a del user
                 $notify = new Notification;
                 $notify->sender_id = Auth::user()->id;
                 $notify->content = 'You Remove a User:'.$name;
                 $notify->save();
+                echo '';
             }
-            echo '';
+
         }
     }
 

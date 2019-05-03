@@ -2,34 +2,6 @@
 use App\Post;
 // import the Intervention Image Manager Class
 use Intervention\Image\ImageManagerStatic as Image;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
-use App\User;
-
-$user = Auth::user();
-$notifications = DB::table('notifications')
-    ->where('receiver_id','=',$user->id)
-    ->where('sender_id','!=',$user->id)
-    ->where('checked','=',0)
-    ->orderBy('id','DESC')
-    ->limit(5)
-    ->get();
-$not_count = DB::table('notifications')
-    ->where('receiver_id','=',$user->id)
-    ->where('sender_id','!=',$user->id)
-    ->where('checked','=',0)
-    ->orderBy('id','DESC')
-    ->count();
-$activities = DB::table('notifications')
-    ->where('sender_id','=',$user->id)
-    ->where('checked','=',0)
-    ->orderBy('id','DESC')
-    ->limit(5)
-    ->get();
-$frs= User::all();
-
-
-
 ?>
         <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -57,6 +29,7 @@ $frs= User::all();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 
+
 </head>
 <body>
 <!--<div class="se-pre-con"></div>-->
@@ -80,37 +53,37 @@ $frs= User::all();
 
                                 <div class="central-meta">
                                     <div class="editing-info">
-                                        <h5 class="f-title"><i class="ti-info-alt"></i> Your Profile</h5>
+                                        <p class="f-title"><i class="ti-info-alt"></i> Your Profile</p>
 
                                         <div class="user_pic">
                                             <img class="img-thumbnail" src="{{URL::asset('avatars/'.Auth::user()->filename)}}" alt="{{Auth::user()->original_filename}}">
                                         </div>
 
                                         <div class="form-group half show_profile" >
-                                            <h3>Your Username</h3><i class="mtrl-select"></i>
+                                            <p style="color: #088dcd;font-size: 22px">Your Username</p><i class="mtrl-select"></i>
                                             <input type="text" id="input" readonly placeholder="{{$currentuser->name}}">
                                         </div>
                                         <div class="form-group half show_profile">
-                                            <h3>Your Email</h3><i class="mtrl-select"></i>
+                                            <p style="color: #088dcd;font-size: 22px">Your Email</p><i class="mtrl-select"></i>
                                             <input type="text" id="input" readonly placeholder="{{$currentuser->email}}">
                                         </div>
                                         <div class="form-group half show_profile">
-                                            <h3>Your Role</h3><i class="mtrl-select"></i>
+                                            <p style="color: #088dcd;font-size: 22px">Your Role</p><i class="mtrl-select"></i>
                                             <input type="text" id="input" readonly placeholder="{{$currentuser->role}}">
 
                                         </div>
                                         <div class="form-group half show_profile">
-                                            <h3>Your City</h3><i class="mtrl-select"></i>
+                                            <p style="color: #088dcd;font-size: 22px">Your City</p><i class="mtrl-select"></i>
                                             <input type="text" id="input" readonly placeholder="{{$currentuser->city}}">
 
                                         </div>
                                         <div class="form-group half show_profile">
-                                            <h3>Your Subject</h3><i class="mtrl-select"></i>
+                                            <p style="color: #088dcd;font-size: 22px">Your Subject</p><i class="mtrl-select"></i>
                                             <input type="text" id="input" readonly placeholder="{{$currentuser->subject}}">
 
                                         </div>
                                         <div class="form-group half show_profile">
-                                            <h3>Your Grade</h3><i class="mtrl-select"></i>
+                                            <p style="color: #088dcd;font-size: 22px">Your Grade</p><i class="mtrl-select"></i>
                                             <input type="text" id="input" readonly placeholder="{{$currentuser->level}}">
 
                                         </div>
@@ -123,14 +96,75 @@ $frs= User::all();
                                 </div>
 
                                 <div class="central-meta">
-                                    <h5 class="f-title"><i class="ti-info-alt"></i> Your Recent Test Score</h5>
+                                    <p class="f-title"><i class="ti-info-alt"></i> Your Recent Test Score</p>
 
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Subject</th>
+                                            <th scope="col">Level</th>
+                                            <th scope="col">Mark</th>
+                                            <th scope="col">Time</th>
+                                            <th scope="col">Test Date Done</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        <?php $i = 1;?>
+                                        @foreach($test as $t)
+                                            <?php
+                                            $subj = new \App\Subject();
+                                            foreach ($subject as $s){
+                                                if ($s->id == $t->subject_id){
+                                                    $subj = $s;
+                                                }
+                                            }
+                                            $lv = new \App\Level();
+                                            foreach ($level as $l){
+                                                if ($l->id == $t->level_id){
+                                                    $lv = $l;
+                                                }
+                                            }
+                                            ?>
+                                            <tr>
+                                                <th scope="row">{{$i++}}</th>
+                                                <td>{{$subj->name}}</td>
+                                                <td>{{$lv->name}}</td>
+                                                <td>{{$t->mark}}</td>
+                                                <td>{{$t->time}}</td>
+                                                <td>{{$t->created_at->diffForHumans()}}</td>
+                                            </tr>
+                                        @endforeach
+
+
+                                        {{--@if(sizeof($test) <10){--}}
+                                        {{--@for($i=1;$i<=sizeof($test);$i++){--}}
+                                        {{--<tr>--}}
+                                        {{--<th scope="row">{{$i}}</th>--}}
+                                        {{--<td>{{$test->subject_id}}</td>--}}
+                                        {{--<td>{{$test->level_id}}</td>--}}
+                                        {{--<td>{{$test->mark}}</td>--}}
+                                        {{--<td>{{$test->time}}</td>--}}
+                                        {{--<td>{{$test->created_at}}</td>--}}
+                                        {{--</tr>--}}
+                                        {{--}@endfor--}}
+                                        {{--}@else{--}}
+                                        {{--@for($i=1;$i<=10;$i++){--}}
+                                        {{--<tr>--}}
+                                        {{--<th scope="row">{{$i}}</th>--}}
+                                        {{--<td>{{$test->subject_id}}</td>--}}
+                                        {{--<td>{{$test->level_id}}</td>--}}
+                                        {{--<td>{{$test->mark}}</td>--}}
+                                        {{--<td>{{$test->time}}</td>--}}
+                                        {{--<td>{{$test->created_at}}</td>--}}
+                                        {{--</tr>--}}
+                                        {{--}@endfor--}}
+                                        {{--}@endif--}}
+                                        </tbody>
+                                    </table>
                                 </div>
 
-                                <div class="central-meta">
-                                    <h5 class="f-title"><i class="ti-info-alt"></i> Your Recent Test Score</h5>
-
-                                </div>
 
                                 <div class="central-meta">
                                     <h5 class="f-title"><i class="ti-info-alt"></i> Check Your Perfomence</h5>
@@ -156,7 +190,7 @@ $frs= User::all();
                                                 <select name="level_id" required>
                                                     <option value="" selected disabled hidden>Choose here</option>
                                                     @foreach ($level as $lv)
-                                                        <option value="{{ $lv->id }}">{{$lv->name }}</option>
+                                                        <option value="{{ $lv->id }}">{{$lv->id }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -172,8 +206,6 @@ $frs= User::all();
                                     function myFunction() {
                                         document.getElementById("myForm").reset();
                                     }
-
-
                                 </script>
 
                             </div><!-- center-->

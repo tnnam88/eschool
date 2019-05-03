@@ -2,31 +2,6 @@
 use App\Post;
 // import the Intervention Image Manager Class
 use Intervention\Image\ImageManagerStatic as Image;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
-use App\User;
-
-$user = Auth::user();
-$notifications = DB::table('notifications')
-    ->where('receiver_id','=',$user->id)
-    ->where('sender_id','!=',$user->id)
-    ->where('checked','=',0)
-    ->orderBy('id','DESC')
-    ->limit(5)
-    ->get();
-$not_count = DB::table('notifications')
-    ->where('receiver_id','=',$user->id)
-    ->where('sender_id','!=',$user->id)
-    ->where('checked','=',0)
-    ->orderBy('id','DESC')
-    ->count();
-$activities = DB::table('notifications')
-    ->where('sender_id','=',$user->id)
-    ->where('checked','=',0)
-    ->orderBy('id','DESC')
-    ->limit(5)
-    ->get();
-$frs= User::all();
 
 
 ?>
@@ -111,7 +86,7 @@ $frs= User::all();
                                                 <select style="display: block" name="user_level">
                                                     <option name="user_level" value="" selected disabled hidden>{{Auth::user()->level}}</option>
                                                     @foreach ($level as $lv)
-                                                        <option value="{{ $lv->name }}" name="{{$lv->name}}">{{$lv->name }}</option>
+                                                        <option value="{{ $lv->id }}" name="{{$lv->id}}">{{$lv->id}}</option>
                                                     @endforeach
                                                 </select>
                                                 <label class="control-label" for="input">Change Your Grade</label>

@@ -127,7 +127,7 @@ class PostController extends Controller
                             </figure>
                             <div class="friend-name wid-80">
                                 <ins><a href="'.url('wall/'.$post_user->id).'" title="">'.$post_user->name.'</a></ins>
-                                <a href="'.url('post/show/'.$post->id).'" class="lead">'.$post->title.'</a>
+                                <a href="'.url('post/show/'.$post->id).'" class="lead post-title-custom">'.$post->title.'</a>
                                 <span>'.$dif.'</span>
                 
                             </div>';
@@ -650,9 +650,9 @@ class PostController extends Controller
                             <figure class="post-avatar">
                                 <img src="'.url('avatars/'.$avatar).'" alt="">
                             </figure>
-                            <div class="friend-name wid-80">
+                            <p class="friend-name wid-80">
                                 <ins><a href="'.url('wall/'.$post_user->id).'" title="">'.$post_user->name.'</a></ins>
-                                <a href="'.url('post/show/'.$post->id).'" class="lead">'.$post->title.'</a>
+                                <a  href="'.url('post/show/'.$post->id).'" class="lead post-title-custom">'.$post->title.'</a>
                                 <span>'.$dif.'</span>
                 
                             </div>';
@@ -842,7 +842,7 @@ class PostController extends Controller
                             </figure>
                             <div class="friend-name wid-50">
                                 <ins><a href="'.url('wall/'.$post_user->id).'" title="">'.$post_user->name.'</a></ins>
-                                <a href="'.url('post/show/'.$post->id).'" class="lead">'.$post->title.'</a>
+                                <a href="'.url('post/show/'.$post->id).'" class="lead post-title-custom">'.$post->title.'</a>
                                 <span>'.$dif.'</span>
                 
                             </div>

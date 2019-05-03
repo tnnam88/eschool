@@ -207,7 +207,7 @@ $frs= User::all();
                                 <div class="links">
                                     <?php
 
-                                    echo "<p>your result: $p/3</p>";
+                                    echo "<p>your result: $p/20</p>";
                                     echo "<p>Your time test : $time</p>";
                                     ?>
                                 </div>

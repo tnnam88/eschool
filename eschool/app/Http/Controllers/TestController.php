@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Result;
 use App\User;
 
 
@@ -38,7 +39,7 @@ class TestController extends Controller
             ->where('level_id',$level_id)
             ->where('subject_id',$subject_id)
             ->inRandomOrder()
-            ->limit(3)
+            ->limit(5)
             ->get();
 
         return view('tests.test', compact('levels','subjects','questions','level_id','subject_id'));
@@ -169,9 +170,13 @@ class TestController extends Controller
                 $p += $answer->is_correct;
             }
         }
-        DB::table('results')->insert(
-            ['user_id'=>$user_id,'subject_id'=>$subject_id,'level_id'=>$level_id,'mark'=>$p,'time'=>$time]
-        );
+        $results = new Result;
+        $results->user_id = $user_id;
+        $results->level_id = $level_id;
+        $results->subject_id =$subject_id;
+        $results->mark = $p*4;
+        $results->time = $time;
+        $results->save();
         return view('tests.result', compact('p','time'));
     }
 

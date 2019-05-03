@@ -2,34 +2,6 @@
 use App\Post;
 // import the Intervention Image Manager Class
 use Intervention\Image\ImageManagerStatic as Image;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
-use App\User;
-
-$user = Auth::user();
-$notifications = DB::table('notifications')
-    ->where('receiver_id','=',$user->id)
-    ->where('sender_id','!=',$user->id)
-    ->where('checked','=',0)
-    ->orderBy('id','DESC')
-    ->limit(5)
-    ->get();
-$not_count = DB::table('notifications')
-    ->where('receiver_id','=',$user->id)
-    ->where('sender_id','!=',$user->id)
-    ->where('checked','=',0)
-    ->orderBy('id','DESC')
-    ->count();
-$activities = DB::table('notifications')
-    ->where('sender_id','=',$user->id)
-    ->where('checked','=',0)
-    ->orderBy('id','DESC')
-    ->limit(5)
-    ->get();
-$frs= User::all();
-
-
-?>
 
 
 ?>
@@ -59,7 +31,6 @@ $frs= User::all();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 
-
 </head>
 <body>
 <!--<div class="se-pre-con"></div>-->
@@ -76,22 +47,61 @@ $frs= User::all();
                         @include('layouts.lsidebar')<!-- sidebar -->
                             <div class="col-lg-6"><!-- center -->
                                 <div class="central-meta">
-                                    <h5 class="f-title"><i class="ti-info-alt"></i> Your Perfomance</h5>
-
-
+                                    <h5 class="f-title"><i class="ti-info-alt"></i> Your Performance</h5>
+                                    <p style="color: #088dcd;font-size: 22px">Your Subject : {{$subj}} </p>
+                                    <p style="color: #088dcd;font-size: 22px">Your Level : {{$lv}}</p>
                                     <div id="linechart" style="width: 900px; height: 500px"></div>
-                                    <div id="warning" style="display: none"><p>Not enough test to show graph</p></div>
+                                    <div id="timechart" style="width: 900px; height: 500px"></div>
+                                    <div id="warning" style="display: none"><p>Not enough test to show your performance (Minimum required : 3)</p></div>
                                 </div><!-- show_mark -->
+
+                                <div class="central-meta">
+                                    <h5 class="f-title"><i class="ti-info-alt"></i> Check Your Performance</h5>
+
+                                    <form method="post" action="{{url('showmark')}}">
+                                        @csrf
+                                        <div class="col-md-12">
+                                            <div class="col-md-4"></div>
+                                            <div class="form-group col-md-4">
+                                                <label for="name">Select Subject :</label>
+                                                <select name="subject_id" required>
+                                                    <option value="" selected disabled hidden>Choose here</option>
+                                                    @foreach ($subject as $sub)
+                                                        <option value="{{ $sub->id }}">{{$sub->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <div class="col-md-4"></div>
+                                            <div class="form-group col-md-4">
+                                                <label for="name">Select Level :</label>
+                                                <select name="level_id" required>
+                                                    <option value="" selected disabled hidden>Choose here</option>
+                                                    @foreach ($level as $lv)
+                                                        <option value="{{ $lv->id }}">{{$lv->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <button type="submit" class="mtr-btn"><span>Check Now !</span></button>
+
+                                    </form>
+                                </div>
                                 <script>
                                     function ShowDiv() {
                                         document.getElementById("user_mark").style.display = "";
                                     }
                                     var visitor = <?php echo $visitor; ?>;
+                                    var time_count = <?php echo $time_count; ?>;
                                     console.log(visitor);
+                                    console.log(time_count);
                                     google.charts.load('current', {'packages':['corechart']});
                                     google.charts.setOnLoadCallback(drawChart);
                                     function drawChart() {
                                         var data = google.visualization.arrayToDataTable(visitor);
+                                        var data2 = google.visualization.arrayToDataTable(time_count);
 
 
                                         var options = {
@@ -105,13 +115,52 @@ $frs= User::all();
                                                 ticks: [0,2,4,6,8,10,12,14,16,18,20],
                                             },
                                             hAxis:{title: 'Date Completed'},
-                                            legend: {position: 'bottom'}
+                                            legend: {position: 'bottom'},
+                                            trendlines: {
+                                                0: {
+                                                    type: 'linear',
+                                                    color: 'green',
+                                                    lineWidth: 3,
+                                                    opacity: 0.3,
+                                                    showR2: true,
+                                                    visibleInLegend: true
+                                                }
+                                            }
+                                        };
+
+                                        var options2 = {
+                                            title: 'Your Time Doing Test ',
+                                            vAxis: {title: 'Time Complete (s)',
+                                                minValue: 0,
+                                                viewWindow:{
+                                                    max:200,
+                                                    min:0
+                                                },
+                                                ticks: [0,20,40,60,80,100,120,140,160,180,200],
+                                            },
+                                            hAxis:{title: 'Date Completed'},
+                                            legend: {position: 'bottom'},
+                                            curveType:'function',
+                                            colors:['red'],
+                                            trendlines: {
+                                                0: {
+                                                    type: 'linear',
+                                                    color: 'green',
+                                                    lineWidth: 3,
+                                                    opacity: 0.3,
+                                                    showR2: true,
+                                                    visibleInLegend: true
+                                                }
+                                            }
                                         };
                                         var chart = new google.visualization.LineChart(document.getElementById('linechart'));
+                                        var chart2 = new google.visualization.LineChart(document.getElementById('timechart'));
                                         chart.draw(data, options);
+                                        chart2.draw(data2, options2);
                                     }
                                     if (visitor.length<3){
                                         document.getElementById('linechart').style.display = "none";
+                                        document.getElementById('timechart').style.display = "none";
                                         document.getElementById('warning').style.display = "block";
                                     }else {
                                         document.getElementById('warning').style.display = "none";
