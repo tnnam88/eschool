@@ -24,30 +24,7 @@ class ShowProfileController extends Controller
             }
             $subject = Subject::all();
             $level = Level::all();
-            /*for all view include layout*/
-            $user = Auth::user();
-            $notifications = DB::table('notifications')
-                ->where('receiver_id','=',$user->id)
-                ->where('sender_id','!=',$user->id)
-                ->where('checked','=',0)
-                ->orderBy('id','DESC')
-                ->limit(5)
-                ->get();
-            $not_count = DB::table('notifications')
-                ->where('receiver_id','=',$user->id)
-                ->where('sender_id','!=',$user->id)
-                ->where('checked','=',0)
-                ->orderBy('id','DESC')
-                ->count();
-            $activities = DB::table('notifications')
-                ->where('sender_id','=',$user->id)
-                ->where('checked','=',0)
-                ->orderBy('id','DESC')
-                ->limit(5)
-                ->get();
-            $frs= User::all();
-
-            return view('profiles.show', compact('frs','notifications','not_count','activities','user','level','subject','currentuser','not_count'));
+            return view('profiles.show', compact('level','subject','currentuser','not_count'));
         }
         return view('auth.login');
     }

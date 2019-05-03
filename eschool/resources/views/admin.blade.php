@@ -29,8 +29,11 @@ $activities = DB::table('notifications')
 $frs= User::all();
 
 
+
+
+
 ?>
-<!DOCTYPE html>
+        <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -60,93 +63,44 @@ $frs= User::all();
 <!--<div class="se-pre-con"></div>-->
 <div class="theme-layout">
 
-    @include('layouts.header')<!-- responsive header -->
+@include('layouts.header')<!-- responsive header -->
 
     <section>
-            <div class="feature-photo">
-                <figure>
-                    <img src="{{asset('images/resources/timeline-1.jpg')}}" alt=""></figure>
-                <div class="add-btn">
-                    <span>1205 followers</span>
-                    <a href="#" title="" data-ripple="">Add Friend</a>
-                </div>
-                <form class="edit-phto">
-                    <i class="fa fa-camera-retro"></i>
-                    <label class="fileContainer">
-                        Edit Cover Photo
-                        <input type="file"/>
-                    </label>
-                </form>
-                <div class="container-fluid">
-                    <div class="row merged">
-                        <div class="col-lg-2 col-sm-3">
-                            <div class="user-avatar">
-                                <?php
-                                $wall_user = App\User::where('id',$wall_id)->first();
-                                $wall_avatar = $wall_user->filename;
-                                ?>
-                                <figure class="wall-avatar">
-                                    <img src="{{asset('avatars/'.$wall_avatar)}}" alt="">
-                                    <form class="edit-phto">
-                                        <i class="fa fa-camera-retro"></i>
-                                        <label class="fileContainer">
-                                            Edit Display Photo
-                                            <input type="file"/>
-                                        </label>
-                                    </form>
-                                </figure>
-                            </div>
+        <div class="gap gray-bg">
+            <div class="container-fluid">
+                <div class="row" id="page-contents">
+                @include('layouts.lsidebar')<!-- lsidebar -->
+                    <div class="col-lg-9 " id="post_data">
+                        {{ csrf_field() }}
+                        <div class="central-meta item">
+                            <input id="myInput" type="text" placeholder="Filter..">
+                            <form action="/create">
+                                <button>Ceate account!</button>
+                            </form>
                         </div>
-                        <div class="col-lg-10 col-sm-9">
-                            <div class="timeline-info">
+                        @if ($errors->any())
+                            <div class="alert alert-danger" style="margin-top: 50px">
                                 <ul>
-                                    <li class="admin-name">
-                                        <h5>{{$wall_user->name}}</h5>
-                                        <span>{{$wall_user->role}}</span>
-                                    </li>
-                                    <li>
-                                        <a class="active" href="time-line.html" title="" data-ripple="">time line</a>
-                                        <a class="" href="timeline-photos.html" title="" data-ripple="">Photos</a>
-                                        <a class="" href="timeline-videos.html" title="" data-ripple="">Videos</a>
-                                        <a class="" href="timeline-friends.html" title="" data-ripple="">Friends</a>
-                                        <a class="" href="timeline-groups.html" title="" data-ripple="">Groups</a>
-                                        <a class="" href="about.html" title="" data-ripple="">about</a>
-                                        <a class="" href="#" title="" data-ripple="">more</a>
-                                    </li>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
                                 </ul>
-                            </div>
-                        </div>
+                            </div><br />
+                        @endif
+                        @if (\Session::has('success'))
+                            <div class="alert alert-success" style="margin-top: 50px">
+                                <p>{{ \Session::get('success') }}</p>
+                            </div><br />
+                        @endif
+
                     </div>
+
                 </div>
             </div>
-        </section><!-- top area -->
-    <section><!-- main web-->
-            <div class="gap gray-bg">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="row" id="page-contents">
-                            @include('layouts.lsidebar')<!-- lsidebar -->
-                                <div class="col-lg-6"><!-- center -->
+        </div>
+    </section>
 
-                                    {{ csrf_field() }}
-                                    <div class="loadMore" id="post_data" data-wall="{{$wall_id}}"><!-- post & cmd -->
-
-
-
-
-                                    </div><!-- post & cmd -->
-
-                                </div><!-- center-->
-                            @include('layouts.rsidebar')<!-- rsidebar -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    @include('layouts.footer')<!-- responsive footer -->
+@include('layouts.footer')<!-- responsive footer -->
 </div>
 @include('layouts.side-panel')<!-- side panel -->
 
@@ -154,20 +108,20 @@ $frs= User::all();
 
 </script><script src="{{asset('js/main.min.js')}}"></script>
 <script src="{{asset('js/script.js')}}"></script>
+<script src="{{asset('js/strip.pkgd.min.js')}}"></script>
 <script>
     $(document).ready(function(){
 
         var _token = $('input[name="_token"]').val();
-        wall_user_id={{$wall_id}};
-        load_data('',wall_user_id, _token);
 
+        load_data('', _token);
 
-        function load_data(id="",wall_user_id='', _token)
+        function load_data(id="", _token)
         {
             $.ajax({
-                url:"{{ route('wall') }}",
+                url:"{{ route('showacc') }}",
                 method:"POST",
-                data:{id:id,wall_user_id:wall_user_id, _token:_token},
+                data:{id:id, _token:_token},
                 success:function(data)
                 {
                     $('#load_more_button').remove();
@@ -179,7 +133,7 @@ $frs= User::all();
         $(document).on('click', '#load_more_button', function(){
             var id = $(this).data('id');
             $('#load_more_button').html('<b>Loading...</b>');
-            load_data(id,wall_user_id, _token);
+            load_data(id, _token);
         });
 
         function load_cmt(id="", post_id="", _token)
@@ -263,14 +217,22 @@ $frs= User::all();
             }
 
         });
-        function delpost(post_id="",_token) {
+
+        $("#myInput").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#page-contents .tr").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+
+        function delpost(acc_id="",_token) {
             $.ajax({
-                url:"{{route('delpost')}}",
+                url:"{{route('delacc')}}",
                 method:"POST",
-                data:{post_id:post_id,_token:_token},
+                data:{acc_id:acc_id,_token:_token},
                 success:function(data)
                 {
-                    $('#post-cube-'+post_id).remove();
+                    $('#post-cube-'+acc_id).remove();
                     alert("Remove post success!!");
                 }
             });
@@ -281,37 +243,10 @@ $frs= User::all();
             var confir = confirm("Press a button!");
             if(confir == true)
             {
-                var post_id = $(this).data('post');
-                delpost(post_id,_token);
+                var acc_id = $(this).data('post');
+                delpost(acc_id,_token);
             }
         });
-        function delcmt(cmt_id="",_token) {
-            $.ajax({
-                url:"{{route('delcmt')}}",
-                method:"POST",
-                data:{cmt_id:cmt_id,_token:_token},
-                success:function(data)
-                {
-                    $('#del-cmt'+cmt_id).remove();
-                    alert("Remove post success!!");
-                }
-            });
-        }
-
-        $(document).on('click','.del-cmt',function () {
-
-            var confir = confirm("Press a button!");
-            if(confir == true)
-            {
-                var cmt_id = $(this).data('cmt');
-                delcmt(cmt_id,_token);
-            }
-        });
-
-
-
-
-
 
 
     });

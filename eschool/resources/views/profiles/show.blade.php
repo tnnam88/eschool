@@ -2,6 +2,32 @@
 use App\Post;
 // import the Intervention Image Manager Class
 use Intervention\Image\ImageManagerStatic as Image;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use App\User;
+
+$user = Auth::user();
+$notifications = DB::table('notifications')
+    ->where('receiver_id','=',$user->id)
+    ->where('sender_id','!=',$user->id)
+    ->where('checked','=',0)
+    ->orderBy('id','DESC')
+    ->limit(5)
+    ->get();
+$not_count = DB::table('notifications')
+    ->where('receiver_id','=',$user->id)
+    ->where('sender_id','!=',$user->id)
+    ->where('checked','=',0)
+    ->orderBy('id','DESC')
+    ->count();
+$activities = DB::table('notifications')
+    ->where('sender_id','=',$user->id)
+    ->where('checked','=',0)
+    ->orderBy('id','DESC')
+    ->limit(5)
+    ->get();
+$frs= User::all();
+
 
 
 ?>
@@ -12,17 +38,23 @@ use Intervention\Image\ImageManagerStatic as Image;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="" />
     <meta name="keywords" content="" />
-    <title>Winku Social Network Toolkit</title>
-    <link rel="icon" href="images/fav.png" type="image/png" sizes="16x16">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Eschool Uruk Babylon</title>
 
-    <link rel="stylesheet" href="css/main.min.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/color.css">
-    <link rel="stylesheet" href="css/responsive.css">
-    <link rel="stylesheet" href="css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
     <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
 
+    <link rel="icon" href="images/fav.png" type="image/png" sizes="16x16">
+
+    <link rel="stylesheet" href="{{asset('css/main.min.css')}}">
+    <link rel="stylesheet" href="{{asset('css/style.css')}}">
+    <link rel="stylesheet" href="{{asset('css/color.css')}}">
+    <link rel="stylesheet" href="{{asset('css/responsive.css')}}">
+    <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 
 </head>

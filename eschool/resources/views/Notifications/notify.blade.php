@@ -1,4 +1,35 @@
+<?php
+use App\Post;
+// import the Intervention Image Manager Class
+use Intervention\Image\ImageManagerStatic as Image;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use App\User;
 
+$user = Auth::user();
+$notifications = DB::table('notifications')
+    ->where('receiver_id','=',$user->id)
+    ->where('sender_id','!=',$user->id)
+    ->where('checked','=',0)
+    ->orderBy('id','DESC')
+    ->limit(5)
+    ->get();
+$not_count = DB::table('notifications')
+    ->where('receiver_id','=',$user->id)
+    ->where('sender_id','!=',$user->id)
+    ->where('checked','=',0)
+    ->orderBy('id','DESC')
+    ->count();
+$activities = DB::table('notifications')
+    ->where('sender_id','=',$user->id)
+    ->where('checked','=',0)
+    ->orderBy('id','DESC')
+    ->limit(5)
+    ->get();
+$frs= User::all();
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

@@ -1,10 +1,34 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: The Doctor
- * Date: 4/25/2019
- * Time: 1:35 AM
- */
+use App\Post;
+// import the Intervention Image Manager Class
+use Intervention\Image\ImageManagerStatic as Image;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use App\User;
+
+$user = Auth::user();
+$notifications = DB::table('notifications')
+    ->where('receiver_id','=',$user->id)
+    ->where('sender_id','!=',$user->id)
+    ->where('checked','=',0)
+    ->orderBy('id','DESC')
+    ->limit(5)
+    ->get();
+$not_count = DB::table('notifications')
+    ->where('receiver_id','=',$user->id)
+    ->where('sender_id','!=',$user->id)
+    ->where('checked','=',0)
+    ->orderBy('id','DESC')
+    ->count();
+$activities = DB::table('notifications')
+    ->where('sender_id','=',$user->id)
+    ->where('checked','=',0)
+    ->orderBy('id','DESC')
+    ->limit(5)
+    ->get();
+$frs= User::all();
+
+
 ?>
 
         <!DOCTYPE html>
@@ -14,13 +38,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="" />
     <meta name="keywords" content="" />
-    <title>Winku Social Network Toolkit</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Eschool Uruk Babylon</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
+
     <link rel="icon" href="images/fav.png" type="image/png" sizes="16x16">
 
-    <link rel="stylesheet" href="css/main.min.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/color.css">
-    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="{{asset('css/main.min.css')}}">
+    <link rel="stylesheet" href="{{asset('css/style.css')}}">
+    <link rel="stylesheet" href="{{asset('css/color.css')}}">
+    <link rel="stylesheet" href="{{asset('css/responsive.css')}}">
+    <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 </head>
 <body>
@@ -29,7 +63,62 @@
 
     @include('layouts.header')<!-- responsive header -->
 
-    @include('layouts.coverphoto')<!-- coverphoto -->
+        <section>
+            <div class="feature-photo">
+                <figure>
+                    <img src="{{asset('images/resources/timeline-1.jpg')}}" alt=""></figure>
+                <div class="add-btn">
+                    <a href="#" title="" data-ripple="">Add Friend</a>
+                </div>
+                <form class="edit-phto">
+                    <i class="fa fa-camera-retro"></i>
+                    <label class="fileContainer">
+                        Edit Cover Photo
+                        <input type="file"/>
+                    </label>
+                </form>
+                <div class="container-fluid">
+                    <div class="row merged">
+                        <div class="col-lg-2 col-sm-3">
+                            <div class="user-avatar">
+                                <?php
+                                $wall_avatar = $user->filename;
+                                ?>
+                                <figure class="wall-avatar">
+                                    <img src="{{asset('avatars/'.$wall_avatar)}}" alt="">
+                                    <form class="edit-phto">
+                                        <i class="fa fa-camera-retro"></i>
+                                        <label class="fileContainer">
+                                            Edit Display Photo
+                                            <input type="file"/>
+                                        </label>
+                                    </form>
+                                </figure>
+                            </div>
+                        </div>
+                        <div class="col-lg-10 col-sm-9">
+                            <div class="timeline-info">
+                                <ul>
+                                    <li class="admin-name">
+                                        <h5>{{$user->name}}</h5>
+                                        <span>{{$user->role}}</span>
+                                    </li>
+                                    <li>
+                                        <a class="active" href="time-line.html" title="" data-ripple="">time line</a>
+                                        <a class="" href="timeline-photos.html" title="" data-ripple="">Photos</a>
+                                        <a class="" href="timeline-videos.html" title="" data-ripple="">Videos</a>
+                                        <a class="" href="timeline-friends.html" title="" data-ripple="">Friends</a>
+                                        <a class="" href="timeline-groups.html" title="" data-ripple="">Groups</a>
+                                        <a class="" href="about.html" title="" data-ripple="">about</a>
+                                        <a class="" href="#" title="" data-ripple="">more</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section><!-- top area -->
 
     <section>
         <div class="gap gray-bg">
@@ -68,7 +157,7 @@
                                             </div>
 
 
-                                            <h5 class="f-title ext-margin"><i class="ti-share"></i> Answer Option</h5>
+
                                             <br/>
                                             <h6 class="f-title ext-margin"><i class="ti-share"></i> False Option</h6>
                                             <div class="form-group">

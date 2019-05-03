@@ -4,6 +4,29 @@
     use Intervention\Image\ImageManagerStatic as Image;
     use Illuminate\Support\Carbon;
     use Illuminate\Support\Facades\DB;
+    use App\User;
+
+    $user = Auth::user();
+    $notifications = DB::table('notifications')
+        ->where('receiver_id','=',$user->id)
+        ->where('sender_id','!=',$user->id)
+        ->where('checked','=',0)
+        ->orderBy('id','DESC')
+        ->limit(5)
+        ->get();
+    $not_count = DB::table('notifications')
+        ->where('receiver_id','=',$user->id)
+        ->where('sender_id','!=',$user->id)
+        ->where('checked','=',0)
+        ->orderBy('id','DESC')
+        ->count();
+    $activities = DB::table('notifications')
+        ->where('sender_id','=',$user->id)
+        ->where('checked','=',0)
+        ->orderBy('id','DESC')
+        ->limit(5)
+        ->get();
+    $frs= User::all();
 
 
 ?>
@@ -75,7 +98,7 @@
                                                             {{--</label>--}}
                                                             {{--</li>--}}
                                                             <li>
-                                                                <i class="fa fa-image"></i>
+                                                                <i class="fa fa-image fa-2x"></i>
                                                                 <label class="fileContainer">
                                                                     <input type="file" name="photo">
                                                                 </label>
@@ -229,7 +252,6 @@
                     $('#addcmt'+post_id).val('');
                     $('#load_more_cmt'+post_id).remove();
                     $('#post-cmt'+post_id+' li:nth-child(2)').after(data);
-
                 }
             });
         }
@@ -253,6 +275,54 @@
             }
 
         });
+        function delpost(post_id="",_token) {
+            $.ajax({
+                url:"{{route('delpost')}}",
+                method:"POST",
+                data:{post_id:post_id,_token:_token},
+                success:function(data)
+                {
+                    $('#post-cube-'+post_id).remove();
+                    alert("Remove post success!!");
+                }
+            });
+        }
+
+        $(document).on('click','.del-post',function () {
+
+            var confir = confirm("Press a button!");
+            if(confir == true)
+            {
+                var post_id = $(this).data('post');
+                delpost(post_id,_token);
+            }
+        });
+
+        function delcmt(cmt_id="",_token) {
+            $.ajax({
+                url:"{{route('delcmt')}}",
+                method:"POST",
+                data:{cmt_id:cmt_id,_token:_token},
+                success:function(data)
+                {
+                    $('#del-cmt'+cmt_id).remove();
+                    alert("Remove post success!!");
+                }
+            });
+        }
+
+        $(document).on('click','.del-cmt',function () {
+
+            var confir = confirm("Press a button!");
+            if(confir == true)
+            {
+                var cmt_id = $(this).data('cmt');
+                delcmt(cmt_id,_token);
+            }
+        });
+
+        // setInterval(function(){ alert("Hello"); }, 3000);
+
 
 
 

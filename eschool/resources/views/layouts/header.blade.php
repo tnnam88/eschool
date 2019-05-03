@@ -12,7 +12,8 @@ use Illuminate\Support\Carbon;
 				<a class="" href="#menu"><i class="fa fa-align-justify"></i></a>
 			</span>
         <span class="mh-text">
-				<a href={{url('/')}} title=""><img src={{asset('images/logo2.png')}} alt=""></a>
+				<i class="fa fa-graduation-cap fa-2x " id="logo-cap" aria-hidden="true"></i>
+
 			</span>
         <span class="mh-btns-right">
 				<a class="fa fa-sliders" href="#shoppingbag"></a>
@@ -21,7 +22,7 @@ use Illuminate\Support\Carbon;
     <div class="mh-head second">
         <form class="mh-form">
             <input placeholder="search" />
-            <a href="#/" class="fa fa-search"></a>
+            <a href="#/"><i class="fa fa-search fa-2x"></i></a>
         </form>
     </div>
     <nav id="menu" class="res-menu">
@@ -115,7 +116,13 @@ use Illuminate\Support\Carbon;
 
 <div class="topbar stick">
     <div class="logo">
-        <a title="" href={{url('/')}}><img src={{asset('images/logo.png')}} alt=""></a>
+        <a title="" href={{url('/')}}><i class="fa fa-graduation-cap fa-5x" aria-hidden="true"></i>
+        </a>
+    </div>
+    <div class ="search-eshool">
+            <input type="text" placeholder="Search.." name="search">
+            <i class="fa fa-search fa-2x"></i>
+
     </div>
 
     <div class="top-area">
@@ -173,19 +180,14 @@ use Illuminate\Support\Carbon;
                 {{--</ul>--}}
             {{--</li>--}}
         {{--</ul>--}}
-        <ul class="setting-area">
+
+        <ul class="setting-area menu-icon-eshool">
             <li>
-                <a href="" title="Home" data-ripple=""><i class="ti-search"></i></a>
-                <div class="searched">
-                    <form method="post" class="form-search">
-                        <input type="text" placeholder="Search Friend">
-                        <button data-ripple><i class="ti-search"></i></button>
-                    </form>
-                </div>
+
             </li>
             <li>
                 <a href="#" title="Notification" data-ripple="">
-                    <i class="fa fa-bell-o" aria-hidden="true"></i>
+                    <i class="fa fa-bell-o fa-2x" aria-hidden="true"></i>
                     <span>{{$not_count}}</span>
                 </a>
                 <div class="dropdowns">
@@ -281,7 +283,7 @@ use Illuminate\Support\Carbon;
                 </div>
             </li>
 
-            <li><a href="#" title="Languages" data-ripple=""><i class="fa fa-globe"></i></a>
+            <li><a href="#" title="Languages" data-ripple=""><i class="fa fa-globe fa-2x"></i></a>
                 <div class="dropdowns languages">
                     <a href="#" title=""><i class="ti-check"></i>English</a>
                     <a href="#" title="">Arabic</a>

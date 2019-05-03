@@ -22,10 +22,28 @@ $recents = Post::where('user_id', '=', $id)->latest()->take(5)->get();
                     <i class="ti-clipboard"></i>
                     <a href={{url('/')}} title="">News feed</a>
                 </li>
-                <li>
-                    <i class="ti-mouse-alt"></i>
-                    <a href="inbox.html" title="">Inbox</a>
-                </li>
+                <?php
+                if(Auth::check()){
+                    $role =Auth::user()->role;
+                    if( $role == 'teacher' || $role == 'admin'){
+                        echo "<li class='admin'>
+                                <i class='ti-files'></i>
+                                <a href='/manager'>Post Manager</a>
+                                </li>";
+                    }
+                }
+                ?>
+                <?php
+                if(Auth::check()){
+                    $role =Auth::user()->role;
+                    if( $role == 'teacher' || $role == 'admin'){
+                        echo "<li class='admin'>
+                                <i class='ti-files'></i>
+                                <a href='/accs'>Account Manager</a>
+                                </li>";
+                    }
+                }
+                ?>
                 <li>
                     <i class="ti-files"></i>
                     <a href="{{url('dotest')}}" title="">Do test</a>
@@ -35,21 +53,13 @@ $recents = Post::where('user_id', '=', $id)->latest()->take(5)->get();
                 if(Auth::check()){
                     $role =Auth::user()->role;
                     if( $role == 'teacher' || $role == 'admin'){
-                        echo "<li>
+                        echo "<li class='admin'>
                                 <i class='ti-files'></i>
                                 <a href='/add_question_form'>Add Question</a>
                                 </li>";
                     }
                 }
                 ?>
-                <li>
-                    <i class="ti-user"></i>
-                    <a href="timeline-friends.html" title="">friends</a>
-                </li>
-                <li>
-                    <i class="ti-comments-smiley"></i>
-                    <a href="messages.html" title="">Messages</a>
-                </li>
                 <li>
                     <i class="ti-bell"></i>
                     <a href="{{ route('notifications') }}"

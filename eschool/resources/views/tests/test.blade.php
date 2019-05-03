@@ -1,21 +1,62 @@
 <?php
+use App\Post;
+// import the Intervention Image Manager Class
+use Intervention\Image\ImageManagerStatic as Image;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\User;
+
+$user = Auth::user();
+$notifications = DB::table('notifications')
+    ->where('receiver_id','=',$user->id)
+    ->where('sender_id','!=',$user->id)
+    ->where('checked','=',0)
+    ->orderBy('id','DESC')
+    ->limit(5)
+    ->get();
+$not_count = DB::table('notifications')
+    ->where('receiver_id','=',$user->id)
+    ->where('sender_id','!=',$user->id)
+    ->where('checked','=',0)
+    ->orderBy('id','DESC')
+    ->count();
+$activities = DB::table('notifications')
+    ->where('sender_id','=',$user->id)
+    ->where('checked','=',0)
+    ->orderBy('id','DESC')
+    ->limit(5)
+    ->get();
+$frs= User::all();
+
+
 ?>
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="" />
-    <meta name="keywords" content="" />
-    <title>Winku Social Network Toolkit</title>
-    <link rel="icon" href="images/fav.png" type="image/png" sizes="16x16">
 
-    <link rel="stylesheet" href="css/main.min.css">
-    <link rel="stylesheet" href="css/strip.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/color.css">
-    <link rel="stylesheet" href="css/responsive.css">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="" />
+        <meta name="keywords" content="" />
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+        <title>Eschool Uruk Babylon</title>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+        <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
+
+        <link rel="icon" href="images/fav.png" type="image/png" sizes="16x16">
+
+        <link rel="stylesheet" href="{{asset('css/main.min.css')}}">
+        <link rel="stylesheet" href="{{asset('css/style.css')}}">
+        <link rel="stylesheet" href="{{asset('css/color.css')}}">
+        <link rel="stylesheet" href="{{asset('css/responsive.css')}}">
+        <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
     <style>
         /* ---------------------style quizmain------------------- */
         #quizmain {
@@ -125,7 +166,7 @@ use Illuminate\Support\Facades\DB;
     </style>
     <script>
         function startTimer() {
-            var tobj = document.getElementById("timespent")
+            var tobj = document.getElementById("timespent");
             var t = "0:00";
             var s = 00;
             var d = new Date();
@@ -135,11 +176,12 @@ use Illuminate\Support\Facades\DB;
                 d.setSeconds(s);
                 min = d.getMinutes();
                 sec = d.getSeconds();
-                if (sec < 10) sec = "0" + sec;
-                document.getElementById("timespent").value = min + ":" + sec;
+                if (sec < 10) sec = '0' + sec;
+                document.getElementById("timespent").value = min+ ':' + sec;
+                document.getElementById("time").value = min*60 + sec;
             }, 1000);
             tobj.value = t;
-        }
+        };
         if (window.addEventListener) {
             window.addEventListener("load", startTimer);
         } else if (window.attachEvent) {
@@ -181,15 +223,21 @@ use Illuminate\Support\Facades\DB;
             <div class="container-fluid">
                 <div class="row" id="page-contents">
                    @include('layouts.lsidebar')
+
                     <div class="col-lg-9">
+
                         <div class="faq-area">
                             <h2>EZ</h2>
+
+                            <input type="text" readonly name="timetest" id="timespent" value="0:00" style="left:1.5%">
                             <div class="accordion" id="accordion">
+
                                 <form role="form" id="quizform" name="quizform" action={{url('result')}} method='get'>
                                     <input type="hidden" name="starttime" value="">
                                     <input type="hidden" name="subject_id" value="{{$subject_id}}">
                                     <input type="hidden" name="level_id" value="{{$level_id}}">
-                                    <input type="text" readonly name="timetest" id="timespent" value="0:00">
+                                    <input type="hidden" readonly name="time" id="time" value="">
+
 
 
                                     @foreach($questions as $question)
@@ -197,14 +245,17 @@ use Illuminate\Support\Facades\DB;
                                     @endforeach
                                     <div id="answerbuttoncontainer">
 
-                                        <button class="answerbutton w3-btn" type="submit" >Submit &#10095;</button>
+                                        <button class="answerbutton w3-btn" type="submit" data-time="" id="test-btn">Submit &#10095;</button>
+
 
 
                                     </div>
                                 </form>
 
 
+
                             </div>
+
                         </div>
                     </div>
                 </div>

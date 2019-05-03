@@ -16,17 +16,17 @@
                             <a href="index.html" title=""><img src={{asset('images/logo.png')}} alt=""></a>
                         </div>
                         <p>
-                            The trio took this simple idea and built it into the world’s leading carpooling platform.
+                            The hallowed scabbard of Excalibur, the embodiment of the utopia King Arthur seeks, originally stolen from her shortly before the Battle of Camlann due to the machinations of Morgan le Fay
                         </p>
                     </div>
                     <ul class="location">
                         <li>
-                            <i class="ti-map-alt"></i>
-                            <p>33 new montgomery st.750 san francisco, CA USA 94105.</p>
+                            <i class="fa fa-map"></i>
+                            <p>The Everdistant Utopia Avalon</p>
                         </li>
                         <li>
                             <i class="ti-mobile"></i>
-                            <p>+1-56-346 345</p>
+                            <p>+18001989</p>
                         </li>
                     </ul>
                 </div>
@@ -50,7 +50,6 @@
                         <li><a href="about.html" title="">about us</a></li>
                         <li><a href="contact.html" title="">contact us</a></li>
                         <li><a href="terms.html" title="">terms & Conditions</a></li>
-                        <li><a href="#" title="">RSS syndication</a></li>
                         <li><a href="sitemap.html" title="">Sitemap</a></li>
                     </ul>
                 </div>
@@ -59,10 +58,8 @@
                 <div class="widget">
                     <div class="widget-title"><h4>useful links</h4></div>
                     <ul class="list-style">
-                        <li><a href="#" title="">leasing</a></li>
                         <li><a href="#" title="">submit route</a></li>
                         <li><a href="#" title="">how does it work?</a></li>
-                        <li><a href="#" title="">agent listings</a></li>
                         <li><a href="#" title="">view All</a></li>
                     </ul>
                 </div>

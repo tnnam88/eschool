@@ -21,27 +21,7 @@ class NotifyController extends Controller
     public function shownotify()
     {
         $user = Auth::user();
-        $notifications = DB::table('notifications')
-            ->where('receiver_id','=',$user->id)
-            ->where('sender_id','!=',$user->id)
-            ->where('checked','=',0)
-            ->orderBy('id','DESC')
-            ->limit(5)
-            ->get();
-        $not_count = DB::table('notifications')
-            ->where('receiver_id','=',$user->id)
-            ->where('sender_id','!=',$user->id)
-            ->where('checked','=',0)
-            ->orderBy('id','DESC')
-            ->count();
-        $activities = DB::table('notifications')
-            ->where('sender_id','=',$user->id)
-            ->where('checked','=',0)
-            ->orderBy('id','DESC')
-            ->limit(5)
-            ->get();
-        $frs= User::all();
-        return view('notifications.notify', compact('frs','notifications','not_count','activities','user'));
+        return view('notifications.notify');
     }
 
     public function notify(Request $request)
@@ -138,26 +118,7 @@ class NotifyController extends Controller
      */
     public function showact()
     {
-        $user = Auth::user();
-        $notifications = DB::table('notifications')
-            ->where('receiver_id','=',$user->id)
-            ->where('checked','=',0)
-            ->orderBy('id','DESC')
-            ->limit(5)
-            ->get();
-        $not_count = DB::table('notifications')
-            ->where('receiver_id','=',$user->id)
-            ->where('checked','=',0)
-            ->orderBy('id','DESC')
-            ->count();
-        $activities = DB::table('notifications')
-            ->where('sender_id','=',$user->id)
-            ->where('checked','=',0)
-            ->orderBy('id','DESC')
-            ->limit(5)
-            ->get();
-        $frs= User::all();
-        return view('notifications.activity', compact('frs','notifications','not_count','activities','user'));
+        return view('notifications.activity');
     }
     public function activity(Request $request)
     {
@@ -241,70 +202,4 @@ class NotifyController extends Controller
         }
     }
 
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

@@ -165,6 +165,15 @@ class CommentController extends Controller
                     Like this comment!
                     </button>
                 ';
+                if($user->role == 'teacher'||$user->role == 'admin'||$user->id ==$cmt->user_id) {
+                    $output .= '<div class="wid-10">
+                            <button id="post-' . $request->cmt_id . '" class="del-cmt" data-cmt = "' . $request->cmt_id. '"
+                            title="remove this comment!">
+                            <i class="fa fa-window-close" aria-hidden="true"></i>
+                            </button>
+                            </div>';
+                }
+
             }
             else
             {
@@ -197,6 +206,14 @@ class CommentController extends Controller
                     Liked!
                     </button>
                 ';
+                if($user->role == 'teacher'||$user->role == 'admin'||$user->id ==$cmt->user_id) {
+                    $output .= '<div class="wid-10">
+                            <button id="post-' . $request->cmt_id . '" class="del-cmt" data-cmt = "' . $request->cmt_id. '"
+                            title="remove this comment!">
+                            <i class="fa fa-window-close" aria-hidden="true"></i>
+                            </button>
+                            </div>';
+                }
             }
             echo $output;
         }

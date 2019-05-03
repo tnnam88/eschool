@@ -16,21 +16,39 @@ Route::get('/', 'PostController@index')->middleware('auth');
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'HomeController@index')->name('home')->middleware('auth');
+
+/* admin user control */
+
+Route::get('/accs', function () {
+    if (\Illuminate\Support\Facades\Auth::user()->role == 'teacher')
+    {
+        return view('admin');
+    }
+    else{
+        return view('welcome');
+    }
+})->middleware('auth');
+Route::post('/showacc','AdminController@showacc')->name('showacc')->middleware('auth');
+Route::post('/delacc','AdminController@delacc')->name('delacc')->middleware('auth');
 /*Post*/
 Route::get('/loadpost', 'PostController@index')->middleware('auth');
-Route::post('/loadpost/loadmore','PostController@loadpost')->name('loadpost');
-Route::post('/post','PostController@store')->name('posts');
-Route::get('/allpost','PostController@manager');
+Route::post('/loadpost/loadmore','PostController@loadpost')->name('loadpost')->middleware('auth');
+Route::post('/post','PostController@store')->name('posts')->middleware('auth');
+Route::get('/manager','PostController@manager')->middleware('auth');
+Route::post('/allpost','PostController@allpost')->name('allpost')->middleware('auth');
+Route::post('/delpost','PostController@delpost')->name('delpost')->middleware('auth');
 
-Route::get('/post/show/{id}', 'PostController@showpost')->name('posts.show');
-Route::get('/wall/{user_id}','PostController@wall')->middleware('auth');
-Route::post('/wall/loadmore','PostController@wallpost')->name('wall');
 
-Route::post('/comment', 'PostController@postcmt')->name('comment');
-Route::post('/comment/like', 'CommentController@like')->name('comment.like');
-Route::post('/loadcomment/loadmore','PostController@loadcomment')->name('loadcmt');
-Route::post('/changelike', 'CommentController@changelike')->name('changelike');
+Route::get('/post/show/{id}', 'PostController@showpost')->name('posts.show')->middleware('auth');
+Route::get('/wall/{user_id}','PostController@wall')->middleware('auth')->middleware('auth');
+Route::post('/wall/loadmore','PostController@wallpost')->name('wall')->middleware('auth');
+
+Route::post('/comment', 'PostController@postcmt')->name('comment')->middleware('auth');
+Route::post('/comment/like', 'CommentController@like')->name('comment.like')->middleware('auth');
+Route::post('/loadcomment/loadmore','PostController@loadcomment')->name('loadcmt')->middleware('auth');
+Route::post('/changelike', 'CommentController@changelike')->name('changelike')->middleware('auth');
+Route::post('/delcmt','PostController@delcmt')->name('delcmt')->middleware('auth');
 
 
 Route::get('/showprofile', 'ShowProfileController@index')->name('profiles.show');
@@ -71,3 +89,7 @@ Route::get('/activity','NotifyController@showact');
 Route::post('/activity/load','NotifyController@activity')->name('activity');
 
 //Testing route
+Route::get('create',function (){
+    return view('create_acc');
+});
+Route::post('dm_register','AdminController@adm_register')->name('adm_register');

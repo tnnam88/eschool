@@ -63,7 +63,7 @@ body {
     width: 100%;
     margin: 0;
     padding: 0;
-    font-size: 2rem;
+    font-size: 1rem;
     overflow-x: hidden;
     color: #545454;
 }
@@ -78,7 +78,7 @@ a,
 a:hover,
 a:focus,
 a:active {
-    color: inherit;
+    /*color: inherit;*/
     outline: none;
     -webkit-text-decoration: none;
     -moz-text-decoration: none;
@@ -668,7 +668,7 @@ header.sticky {
     display: inline-block;
     text-align: right;
     vertical-align: middle;
-    width: 84%;
+    width: 34%;
 }
 
 .top-area > ul {
@@ -3802,16 +3802,16 @@ form .form-group.half:nth-child(2) {
 }
 
 .chosen-container-single .chosen-single {
-    background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
-    border-color: -moz-use-text-color -moz-use-text-color #e1e8ed;
-    border-radius: 0;
-    border-style: none none solid;
-    border-width: 0 0 1px;
-    box-shadow: none;
-    color: #b7b7b7 !important;
-    font-size: 16px;
-    height: 35px;
-    line-height: 35px;
+    /*background: rgba(0, 0, 0, 0) none repeat scroll 0 0;*/
+    /*border-color: -moz-use-text-color -moz-use-text-color #e1e8ed;*/
+    /*border-radius: 0;*/
+    /*border-style: none none solid;*/
+    /*!*border-width: 0 0 1px;*!*/
+    /*box-shadow: none;*/
+    /*color: #b7b7b7 !important;*/
+    /*font-size: 16px;*/
+    /*height: 35px;*/
+    /*line-height: 35px;*/
 }
 
 form .dob .form-group {
@@ -3821,7 +3821,7 @@ form .dob .form-group {
 }
 
 .chosen-container {
-    width: 100% !important;
+    /*width: 100% !important;*/
 }
 
 form .dob .form-group:last-child {
@@ -10081,3 +10081,37 @@ aside.sidebar.full-style {
     height: 160px;
     overflow: hidden;
 }
+.wid-10{
+    width: 10%;
+    display: inline-block;
+}
+.wid-15{
+    width: 15%;
+    display: inline-block;
+}
+.wid-50{
+    width: 50%;
+}
+
+.wid-80{
+    width: 80%;
+}
+.search-eshool{
+    display: inline-block;
+    text-align: right;
+    vertical-align: middle;
+    width: 50%;
+}
+.search-eshool input{
+     width: 50%;
+     margin:1%;
+     padding: 1.5%;
+ }
+.search-eshool i{
+    color:#007bff;
+}
+.admin{
+    background-color: yellow;
+}
+
+

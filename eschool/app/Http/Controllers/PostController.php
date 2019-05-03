@@ -24,30 +24,8 @@ class PostController extends Controller
      */
     function index()
     {
-        $user = Auth::user();
-        $notifications = DB::table('notifications')
-            ->where('receiver_id','=',$user->id)
-            ->where('sender_id','!=',$user->id)
-            ->where('checked','=',0)
-            ->orderBy('id','DESC')
-            ->limit(5)
-            ->get();
-        $not_count = DB::table('notifications')
-            ->where('receiver_id','=',$user->id)
-            ->where('sender_id','!=',$user->id)
-            ->where('checked','=',0)
-            ->orderBy('id','DESC')
-            ->count();
-        $activities = DB::table('notifications')
-            ->where('sender_id','=',$user->id)
-            ->where('checked','=',0)
-            ->orderBy('id','DESC')
-            ->limit(5)
-            ->get();
-// ROR RECENT POST
-        $recents = Post::where('user_id', '=', $user->id)->latest()->take(5)->get();
-        $frs= User::all();
-        return view('welcome', compact('frs','notifications','not_count','activities','user'));
+
+        return view('welcome');
     }
     /**
      * Control ajax  load more post on Home Page
@@ -71,10 +49,10 @@ class PostController extends Controller
         $post->title = $request->title;
         $post->content = $request->content;
         $post->user_id = \Auth::user()->id;
-//notification for a new post
 
 
-// Store photo of a post
+
+        // Store photo of a post
         if ($request->file('photo') != NULL) {
             $photo = $request->file('photo');
             $extension = $photo->getClientOriginalExtension();
@@ -86,6 +64,7 @@ class PostController extends Controller
             $post->filename = $photo->getFilename() . '.' . $extension;
         }
         $post->save();
+        //notification for a new post
         $notify = new Notification;
         $notify->sender_id = Auth::user()->id;
         $notify->post_id = $post->id;
@@ -122,7 +101,8 @@ class PostController extends Controller
             {
                 foreach($data as $post)
                 {
-                    $user_avt = Auth::user()->filename;
+                    $user = Auth::user();
+                    $user_avt =$user->filename;
                     $post_user = DB::table('users')
                         ->where('id', $post->user_id)
                         ->first();
@@ -139,19 +119,27 @@ class PostController extends Controller
 
 
 
-                    $output .= '<div class="central-meta item">
+                    $output .= '<div class="central-meta item" id="post-cube-'.$post->id.'">
                     <div class="user-post">
                         <div class="friend-info">
                             <figure class="post-avatar">
                                 <img src="'.url('avatars/'.$avatar).'" alt="">
                             </figure>
-                            <div class="friend-name">
+                            <div class="friend-name wid-80">
                                 <ins><a href="'.url('wall/'.$post_user->id).'" title="">'.$post_user->name.'</a></ins>
                                 <a href="'.url('post/show/'.$post->id).'" class="lead">'.$post->title.'</a>
                                 <span>'.$dif.'</span>
                 
-                            </div>
-                            <div class="post-meta">
+                            </div>';
+                    if($user->role == 'teacher'||$user->role == 'admin'||$user->id ==$post->user_id) {
+                        $output .='<div class="wid-10">
+                            <button id="post-' . $post->id . '" class="del-post" data-post = "' . $post->id . '">
+                            <i class="fa fa-window-close" aria-hidden="true"></i>
+                            </button>
+                            </div>';
+                    }
+
+                    $output .= '<div class="post-meta">
                                 <img src="uploads/'.$post->filename.'" alt="">
                 
                                 <div class="we-video-info">
@@ -336,15 +324,23 @@ class PostController extends Controller
                     </button>
                         ';
                     }
+                    if($user->role == 'teacher'||$user->role == 'admin'||$user->id ==$cmt->user_id) {
+                        $like_box .= '<div class="wid-10">
+                            <button id="post-' . $cmt->id . '" class="del-cmt" data-cmt = "' . $cmt->id . '"
+                            title="remove this comment!">
+                            <i class="fa fa-window-close" aria-hidden="true"></i>
+                            </button>
+                            </div>';
+                    }
 
 
                     $output .= '
-                        <li data-cmt="'.$cmt->id.'">
+                        <li data-cmt="'.$cmt->id.'" id="del-cmt'.$cmt->id.'">
                             <div class="comet-avatar">
                                 <img src="'.url('avatars/'.$avatar).'" alt="">
 
                             </div>
-                            <div class="we-comment">
+                            <div class="we-comment wid-50">
                                 <div class="coment-head" >
                                     <h5><a href="'.url('wall/'.$cmt_user->id).'" title="">'.$cmt_user->name.'</a></h5>
                                     <span>'.$dif.'</span>  
@@ -357,8 +353,7 @@ class PostController extends Controller
                                     '.$like_box.'
                                 </div>
                             </div>
-                            
-                        </li>';
+                            </li>';
                     $last_id = $cmt->id;
                 }
                 $output .= '
@@ -463,10 +458,18 @@ class PostController extends Controller
                     </button>
                         ';
                         }
+                        if($user->role == 'teacher'||$user->role == 'admin'||$user->id ==$cmt->user_id) {
+                            $like_box .= '<div class="wid-10">
+                            <button id="post-' . $cmt->id . '" class="del-cmt" data-cmt = "' . $cmt->id . '"
+                            title="remove this comment!">
+                            <i class="fa fa-window-close" aria-hidden="true"></i>
+                            </button>
+                            </div>';
+                        }
 
 
                         $output .= '
-                        <li data-cmt="'.$cmt->id.'">
+                        <li data-cmt="'.$cmt->id.'" id="del-cmt'.$cmt->id.'">
                             <div class="comet-avatar">
                                 <img src="'.url('avatars/'.$avatar).'" alt="">
 
@@ -539,10 +542,18 @@ class PostController extends Controller
                     </button>
                         ';
                     }
+                    if($user->role == 'teacher'||$user->role == 'admin'||$user->id ==$cmt->user_id) {
+                        $like_box .= '<div class="wid-10">
+                            <button id="post-' . $cmt->id . '" class="del-cmt" data-cmt = "' . $cmt->id . '"
+                            title="remove this comment!">
+                            <i class="fa fa-window-close" aria-hidden="true"></i>
+                            </button>
+                            </div>';
+                    }
 
 
                     $output .= '
-                        <li data-cmt="'.$cmt->id.'">
+                        <li data-cmt="'.$cmt->id.'" id="del-cmt'.$cmt->id.'">
                             <div class="comet-avatar">
                                 <img src="'.url('avatars/'.$avatar).'" alt="">
 
@@ -584,27 +595,8 @@ class PostController extends Controller
      */
     function wall($id)
     {
-        $user = Auth::user();
-        $notifications = DB::table('notifications')
-            ->where('receiver_id','=',$user->id)
-            ->where('checked','=',0)
-            ->orderBy('id','DESC')
-            ->limit(5)
-            ->get();
-        $not_count = DB::table('notifications')
-            ->where('receiver_id','=',$user->id)
-            ->where('checked','=',0)
-            ->orderBy('id','DESC')
-            ->count();
-        $activities = DB::table('notifications')
-            ->where('sender_id','=',$user->id)
-            ->where('checked','=',0)
-            ->orderBy('id','DESC')
-            ->limit(5)
-            ->get();
-        $frs= User::all();
         $wall_id= $id;
-        return view('wall', compact('wall_id','frs','notifications','not_count','activities','user'));
+        return view('wall', compact('wall_id'));
     }
     function  wallpost(Request $request)
     {
@@ -635,7 +627,7 @@ class PostController extends Controller
             {
                 foreach($data as $post)
                 {
-                    $user_avt = Auth::user()->filename;
+                    $user = Auth::user();
                     $post_user = DB::table('users')
                         ->where('id', $post->user_id)
                         ->first();
@@ -652,20 +644,28 @@ class PostController extends Controller
 
 
 
-                    $output .= '<div class="central-meta item">
+                    $output .= '<div class="central-meta item" id="post-cube-'.$post->id.'">
                     <div class="user-post">
                         <div class="friend-info">
                             <figure class="post-avatar">
                                 <img src="'.url('avatars/'.$avatar).'" alt="">
                             </figure>
-                            <div class="friend-name">
+                            <div class="friend-name wid-80">
                                 <ins><a href="'.url('wall/'.$post_user->id).'" title="">'.$post_user->name.'</a></ins>
-                                <a href="" class="lead">'.$post->title.'</a>
+                                <a href="'.url('post/show/'.$post->id).'" class="lead">'.$post->title.'</a>
                                 <span>'.$dif.'</span>
                 
-                            </div>
-                            <div class="post-meta">
-                                <img src="'.url('uploads/'.$post->filename).'" alt="">
+                            </div>';
+                    if($user->role == 'teacher'||$user->role == 'admin'||$user->id ==$post->user_id) {
+                        $output .='<div class="wid-10">
+                            <button id="post-' . $post->id . '" class="del-post" data-post = "' . $post->id . '">
+                            <i class="fa fa-window-close" aria-hidden="true"></i>
+                            </button>
+                            </div>';
+                    }
+
+                    $output .= '<div class="post-meta">
+                                <img src="uploads/'.$post->filename.'" alt="">
                 
                                 <div class="we-video-info">
                                     <ul>
@@ -730,22 +730,18 @@ class PostController extends Controller
                                 
                                 <li class="post-comment">
                                     <div class="comet-avatar">
-                                        <img src="'.url('avatars/'.$user_avt).'" alt="{{$avatar}}">
+                                        <img src="'.url('avatars/'.$user->filename).'" alt="{{$avatar}}">
                                     </div>
                                     <div class="post-comt-box">
-                                        <form method="post" action={{url(\'comment/store\')}}>
-
-                                            <input type="hidden" id="post-id-comment" name="post_id" value={{$post_id}}>
-                                            <textarea  placeholder="Post your comment" required="required" name="content"></textarea>        
-                                            <button type="submit">Comment</button>
-
-                                        </form>
+                                                <input type="hidden" name="_token" value='.csrf_token().'>
+                                            <textarea  id="addcmt'.$post->id.'" placeholder="Post your comment" required="required"  name="content"></textarea>        
+                                            <button data-p="'.$post->id.'" type="submit" class="new-cmt">Comment</button>                                        
                                     </div>
                                 </li>
                                 <li>
                                     <button type="button" name="l" class="btn btn-success load_more_cmt" 
-                                    id="load_more_cmt'.$post->id.'"
-                                    data-id="0" data-post="'.$post->id.'">Load Comment</button>
+                                    id="load_more_cmt'.$post->id.'" data-newid="0"
+                                    data-id="0" data-post="'.$post->id.'">Load Old Comment</button>
                                 </li>
           
                                 
@@ -780,32 +776,157 @@ class PostController extends Controller
     function  showpost($id)
     {
 
-        $user = Auth::user();
-        $notifications = DB::table('notifications')
-            ->where('receiver_id','=',$user->id)
-            ->where('checked','=',0)
-            ->orderBy('id','DESC')
-            ->limit(5)
-            ->get();
-        $not_count = DB::table('notifications')
-            ->where('receiver_id','=',$user->id)
-            ->where('checked','=',0)
-            ->orderBy('id','DESC')
-            ->count();
-        $activities = DB::table('notifications')
-            ->where('sender_id','=',$user->id)
-            ->where('checked','=',0)
-            ->orderBy('id','DESC')
-            ->limit(5)
-            ->get();
-        $frs= User::all();
-        return view('posts.show', compact('id','frs','notifications','not_count','activities','user'));
+
+        return view('posts.show', compact('id'));
     }
 
 
     public function manager()
     {
-        return view('posts.allpost');
+        $levels =DB::table('levels')->get();
+        $subjects =DB::table('subjects')->get();
+        return view('posts.allpost',compact('levels','subjects'));
+    }
+    public function allpost(Request $request)
+    {
+        if($request->ajax())
+        {
+            if($request->id > 0)
+            {
+                $data = DB::table('posts')
+                    ->where('id', '<', $request->id)
+                    ->orderBy('id', 'DESC')
+                    ->limit(5)
+                    ->get();
+            }
+            else
+            {
+                $data = DB::table('posts')
+                    ->orderBy('id', 'DESC')
+                    ->limit(5)
+                    ->get();
+
+            }
+            $output = '';
+            $last_id = '';
+
+            if(!$data->isEmpty())
+            {
+                foreach($data as $post)
+                {
+                    $user =  Auth::user();
+                    $post_user = DB::table('users')
+                        ->where('id', $post->user_id)
+                        ->first();
+                    $count_cm =  DB::table('comments')
+                        ->where('post_id','=',$post->id)
+                        ->count();
+                    $comments =  DB::table('comments')
+                        ->where('post_id','=',$post->id)
+                        ->limit(3)
+                        ->get();
+                    $avatar=$post_user->filename;
+                    $car = new Carbon($post->updated_at);
+                    $dif = $car->diffForHumans();
+                    $subject ='none';
+                    $level = 'none';
+
+
+
+
+                    $output .= '<div class="central-meta item tr" id="post-cube-'.$post->id.'">
+                    <div class="user-post tr">
+                        <div class="friend-info ">
+                            <figure class="post-avatar wid-10">
+                                <img src="'.url('avatars/'.$avatar).'" alt="">
+                            </figure>
+                            <div class="friend-name wid-50">
+                                <ins><a href="'.url('wall/'.$post_user->id).'" title="">'.$post_user->name.'</a></ins>
+                                <a href="'.url('post/show/'.$post->id).'" class="lead">'.$post->title.'</a>
+                                <span>'.$dif.'</span>
+                
+                            </div>
+                            <div class="wid-15">
+                                <p>#Subject-'.$subject.'</p>
+                                
+                            </div>
+                            <div class="wid-15">
+                                <p>#Level-'.$level.'</p>
+                              
+                            </div>';
+                        if($user->role == 'teacher'||$user->role == 'admin'||$user->id ==$post->user_id) {
+                            $output .='<div class="wid-10">
+                            <button id="post-' . $post->id . '" class="del-post" data-post = "' . $post->id . '">
+                            <i class="fa fa-window-close" aria-hidden="true"></i>
+                            </button>
+                            </div>';
+                            }
+                            $output .='</div>
+                        
+                        
+                    </div>
+                </div>';
+                    $last_id = $post->id;
+                }
+                $output .= '
+                       <div id="load_more">
+                        <button type="button" name="load_more_button" class="btn btn-success form-control" data-id="'.$last_id.'" id="load_more_button">Load More</button>
+                       </div>
+                       ';
+            }
+            else
+            {
+                $output .= '
+       <div id="load_more">
+        <button type="button" name="load_more_button" class="btn btn-info form-control">No Data Found</button>
+       </div>
+       ';
+            }
+
+            echo $output;
+
+
+        }
+    }
+    function delpost(Request $request)
+{
+    if($request->ajax())
+    {
+        $poster_id = DB::table('posts')
+            ->where('id','=',$request->post_id)
+            ->first()->user_id;
+        DB::table('posts')
+            ->where('id','=',$request->post_id)
+            ->delete();
+        //notification for a del post
+        $notify = new Notification;
+        $notify->sender_id = Auth::user()->id;
+        $notify->receiver_id = $poster_id;
+        $notify->post_id = $request->post_id;
+        $notify->content = 'A Post Has Been Del ';
+        $notify->save();
+        echo '';
+    }
+}
+    function delcmt(Request $request)
+    {
+        if($request->ajax())
+        {
+            $cmter_id = DB::table('comments')
+                ->where('id','=',$request->cmt_id)
+                ->first()->user_id;
+            DB::table('comments')
+                ->where('id','=',$request->cmt_id)
+                ->delete();
+            //notification for a del post
+            $notify = new Notification;
+            $notify->sender_id = Auth::user()->id;
+            $notify->receiver_id = $cmter_id;
+            $notify->comment_id = $request->cmt_id;
+            $notify->content = 'A Comment Has Been Del ';
+            $notify->save();
+            echo '';
+        }
     }
 
 
