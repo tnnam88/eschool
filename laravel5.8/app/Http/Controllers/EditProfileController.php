@@ -8,6 +8,12 @@ use App\Level;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Input;
+
+
+// import the Intervention Image Manager Class
+use Intervention\Image\ImageManagerStatic as Image;
+
 class EditProfileController extends Controller
 {
     public function index()
@@ -20,9 +26,31 @@ class EditProfileController extends Controller
                     $currentuser = $u;
                 }
             }
-            $subjects = Subject::all();
-            $levels = Level::all();
-            return view('profiles.edit', ['subject' => $subjects, 'level'=>$levels,'currentuser'=>$currentuser]);
+            $subject = Subject::all();
+            $level = Level::all();
+            $user = Auth::user();
+            $notifications = DB::table('notifications')
+                ->where('receiver_id','=',$user->id)
+                ->where('sender_id','!=',$user->id)
+                ->where('checked','=',0)
+                ->orderBy('id','DESC')
+                ->limit(5)
+                ->get();
+            $not_count = DB::table('notifications')
+                ->where('receiver_id','=',$user->id)
+                ->where('sender_id','!=',$user->id)
+                ->where('checked','=',0)
+                ->orderBy('id','DESC')
+                ->count();
+            $activities = DB::table('notifications')
+                ->where('sender_id','=',$user->id)
+                ->where('checked','=',0)
+                ->orderBy('id','DESC')
+                ->limit(5)
+                ->get();
+            $frs= User::all();
+
+            return view('profiles.edit', compact('frs','notifications','not_count','activities','user','level','subject','currentuser','not_count'));
         }
         return view('auth.login');
     }
@@ -71,6 +99,8 @@ class EditProfileController extends Controller
         if ($request->file('avatar') != NULL){
 
             $photo = $request->file('avatar');
+//            $avatar = Image::make($photo->getRealPath())->resize(45,45)->save($photo.time().$photo->getClientOriginalName());
+
             $extension = $photo->getClientOriginalExtension();
             Storage::disk('public_avatars')->put($photo->getFilename() . '.' . $extension, File::get($photo));
 
@@ -78,12 +108,16 @@ class EditProfileController extends Controller
             $mime = $photo->getClientMimeType();
             $original_filename = $photo->getClientOriginalName();
             $filename = $photo->getFilename() . '.' . $extension;
+
+
         }
         else{
             $mime=Auth::user()->mime;
             $original_filename=Auth::user()->original_filename;
             $filename=Auth::user()->filename;
         }
+        $frs= User::all();
+
         //end check
 
         //update database
@@ -91,6 +125,6 @@ class EditProfileController extends Controller
             ['name'=>$username,'email'=>$email,'role'=>$role,'mime'=>$mime,'original_filename'=>$original_filename
                 ,'filename'=>$filename,'level'=>$level, 'subject' => $subject, 'city'=>$city]
         );
-        return back()->with('success','Profile updated !');
+        return back()->with('success','Profile updated !',[$frs]);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\User;
 
 
 class TestController extends Controller
@@ -19,7 +20,8 @@ class TestController extends Controller
     {
         $levels = DB::table('levels')->get();
         $subjects = DB::table('subjects')->get();
-        return view('testform',['levels'=>$levels,'subjects'=>$subjects]);
+        $frs= User::all();
+        return view('tests.testform',['levels'=>$levels,'subjects'=>$subjects,'frs'=>$frs]);
     }
 
     /**
@@ -37,7 +39,8 @@ class TestController extends Controller
             ->inRandomOrder()
             ->limit(3)
             ->get();
-        return view('test',['questions'=>$questions,'level_id'=>$level_id,'subject_id'=>$subject_id]);
+        $frs= User::all();
+        return view('tests.test',['questions'=>$questions,'level_id'=>$level_id,'subject_id'=>$subject_id,'frs'=>$frs]);
     }
 
     /**
@@ -51,14 +54,63 @@ class TestController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Show the form for creating a new question.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function addQuestionForm()
+    {
+        $levels = DB::table('levels')->get();
+        $subjects = DB::table('subjects')->get();
+        $frs= User::all();
+        return view('tests.addQuestionForm',['levels'=>$levels,'subjects'=>$subjects,'frs'=>$frs]);
+    }
+
+    /**
+ * Store a newly created resource in storage.
+ *
+ * @param  \Illuminate\Http\Request  $request
+ * @return \Illuminate\Http\Response
+ */
+    public function store(Request $request)
+    {
+
+    }
+
+    /**
+     * Store a newly created question in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function addQuestion(Request $request)
     {
-        //
+        $user_id = Auth::user()->id;
+        $level_id = $request->input('testlvl_id');
+        $subject_id = $request->input('testsubject_id');
+        $question = $request->input('question');
+        $answer1 = $request->input('answer1');
+        $answer2 = $request->input('answer2');
+        $answer3 = $request->input('answer3');
+        $answer = $request->input('answer');
+
+        $question_id = DB::table('questions')->insertGetId(
+            ['user_id'=>$user_id,'subject_id' => $subject_id, 'level_id' => $level_id, 'content' => $question]
+        );
+        DB::table('answers')->insert(
+            ['question_id' => $question_id, 'content' => $answer1, 'is_correct' => 0]
+        );
+        DB::table('answers')->insert(
+            ['question_id' => $question_id, 'content' => $answer2, 'is_correct' => 0]
+        );
+        DB::table('answers')->insert(
+            ['question_id' => $question_id, 'content' => $answer3, 'is_correct' => 0]
+        );
+        DB::table('answers')->insert(
+            ['question_id' => $question_id, 'content' => $answer, 'is_correct' => 1]
+        );
+        $frs= User::all();
+        return view('tests.addQuestionResult',compact('frs'));
     }
 
     /**
@@ -71,6 +123,7 @@ class TestController extends Controller
     {
         $level_id = $request->input('level_id');
         $subject_id = $request->input('subject_id');
+        $timetest = $request->input('timetest');
         $user_id = Auth::id();
         $results = $request->all();
         $p = 0;
@@ -80,7 +133,7 @@ class TestController extends Controller
         else {
             foreach ($results as $k => $v) {
                 $answer = DB::table('answers')->where('id', $v)->first();
-                if ($k == 'starttime'|| $k =='subject' || $k =='level'){
+                if ($k == 'starttime'|| $k =='subject_id' || $k =='level_id'|| $k =="timetest"){
                     continue;
                 }
 
@@ -91,12 +144,12 @@ class TestController extends Controller
                 $p += $answer->is_correct;
             }
         }
-        $p = ($p*100)/3;
-        DB::table('test_histories')->insert(
-            ['user_id'=>$user_id,'subject_id'=>$subject_id,'level_id'=>$level_id,'result'=>$p]
+        DB::table('results')->insert(
+            ['user_id'=>$user_id,'subject_id'=>$subject_id,'level_id'=>$level_id,'result'=>$p,'timetest'=>$timetest]
         );
+        $frs= User::all();
 
-        return view('result',['p'=>$p]);
+        return view('tests.result',['p'=>$p,'timetest'=>$timetest,'frs'=>$frs]);
     }
 
     /**

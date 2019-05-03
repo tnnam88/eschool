@@ -1,99 +1,268 @@
-<!doctype html>
+<?php
+    use App\Post;
+    // import the Intervention Image Manager Class
+    use Intervention\Image\ImageManagerStatic as Image;
+    use Illuminate\Support\Carbon;
+    use Illuminate\Support\Facades\DB;
+
+
+?>
+<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Eschool Uruk Babylon</title>
 
-        <title>Laravel</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+    <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
 
-        <!-- Styles -->
-        <style>
-            html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: 'Nunito', sans-serif;
-                font-weight: 200;
-                height: 100vh;
-                margin: 0;
-            }
+    <link rel="icon" href="images/fav.png" type="image/png" sizes="16x16">
 
-            .full-height {
-                height: 100vh;
-            }
+    <link rel="stylesheet" href="css/main.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/color.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
 
-            .position-ref {
-                position: relative;
-            }
 
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
 
-            .content {
-                text-align: center;
-            }
 
-            .title {
-                font-size: 84px;
-            }
+</head>
+<body>
+<!--<div class="se-pre-con"></div>-->
+<div class="theme-layout">
 
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 13px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
+    @include('layouts.header')<!-- responsive header -->
 
-            .m-b-md {
-                margin-bottom: 30px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))
-                <div class="top-right links">
-                    @auth
-                        <a href="{{ url('/home') }}">Home</a>
-                    @else
-                        <a href="{{ route('login') }}">Login</a>
+    <section><!-- main web-->
+        <div class="gap gray-bg">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row" id="page-contents">
+                            @include('layouts.lsidebar')<!-- lsidebar -->
+                            <div class="col-lg-6"><!-- center -->
+                                    <div class="central-meta">
+                                        <div class="new-postbox">
+                                            <figure class="avatar">
+                                                <?php
+                                                $avatar = Auth::user()->filename;
+                                                //                                            Image::make('avatars/'.$avatar)->resize(45,45)->save();
+                                                ?>
+                                                <img src="{{url('avatars/'.$avatar)}}" alt="{{$avatar}}">
+                                            </figure>
+                                            <div class="newpst-input">
 
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}">Register</a>
-                        @endif
-                    @endauth
-                </div>
-            @endif
+                                                <form method="post" action="{{url('post')}}" enctype="multipart/form-data" >
+                                                    @csrf
+                                                    <textarea rows="1" placeholder="Title" name="title"></textarea>
+                                                    <textarea rows="2" placeholder="Write something" name="content"></textarea>
+                                                    <div class="attachments">
+                                                        <ul>
+                                                            {{--<li>--}}
+                                                            {{--<i class="fa fa-music"></i>--}}
+                                                            {{--<label class="fileContainer">--}}
+                                                            {{--<input type="file">--}}
+                                                            {{--</label>--}}
+                                                            {{--</li>--}}
+                                                            <li>
+                                                                <i class="fa fa-image"></i>
+                                                                <label class="fileContainer">
+                                                                    <input type="file" name="photo">
+                                                                </label>
+                                                            </li>
+                                                            {{--<li>--}}
+                                                            {{--<i class="fa fa-video-camera"></i>--}}
+                                                            {{--<label class="fileContainer">--}}
+                                                            {{--<input type="file">--}}
+                                                            {{--</label>--}}
+                                                            {{--</li>--}}
+                                                            {{--<li>--}}
+                                                            {{--<i class="fa fa-camera"></i>--}}
+                                                            {{--<label class="fileContainer">--}}
+                                                            {{--<input type="file">--}}
+                                                            {{--</label>--}}
+                                                            {{--</li>--}}
+                                                            <li>
+                                                                <button type="submit">Post</button>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        @if ($errors->any())
+                                            <div class="alert alert-danger" style="margin-top: 50px">
+                                                <ul>
+                                                    @foreach ($errors->all() as $error)
+                                                        <li>{{ $error }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </div><br />
+                                        @endif
+                                        @if (\Session::has('success'))
+                                            <div class="alert alert-success" style="margin-top: 50px">
+                                                <p>{{ \Session::get('success') }}</p>
+                                            </div><br />
+                                        @endif
+                                    </div><!-- add post -->
+                                    {{ csrf_field() }}
+                                    <div class="loadMore" id="post_data"><!-- post & cmd -->
 
-            <div class="content">
-                <div class="title m-b-md">
-                    Laravel
-                </div>
 
-                <div class="links">
-                    <a href="https://laravel.com/docs">Docs</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://blog.laravel.com">Blog</a>
-                    <a href="https://nova.laravel.com">Nova</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
+
+
+                                    </div><!-- post & cmd -->
+
+                                </div><!-- center-->
+                            @include('layouts.rsidebar')<!-- rsidebar -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </body>
+    </section>
+        <div id="auto10">
+
+        </div>
+
+    @include('layouts.footer')<!-- responsive footer -->
+</div>
+
+@include('layouts.side-panel')<!-- side panel -->
+
+<script data-cfasync="false" src={{asset('js/email-decode.min.js')}}></script>
+<script src={{asset('js/main.min.js')}}></script>
+<script src={{asset('js/script.js')}}></script>
+<script src={{asset('js/map-init.js')}}></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8c55_YHLvDHGACkQscgbGLtLRdxBDCfI"></script>
+<script>
+    $(document).ready(function(){
+
+        var _token = $('input[name="_token"]').val();
+
+        load_data('', _token);
+
+        function load_data(id="", _token)
+        {
+            $.ajax({
+                url:"{{ route('loadpost') }}",
+                method:"POST",
+                data:{id:id, _token:_token},
+                success:function(data)
+                {
+                    $('#load_more_button').remove();
+                    $('#post_data').append(data);
+                }
+            });
+        }
+
+        $(document).on('click', '#load_more_button', function(){
+            var id = $(this).data('id');
+            $('#load_more_button').html('<b>Loading...</b>');
+            load_data(id, _token);
+        });
+
+        function load_cmt(id="", post_id="", _token)
+        {
+            $.ajax({
+                url:"{{ route('loadcmt') }}",
+                method:"POST",
+                data:{id:id, post_id:post_id, _token:_token},
+                success:function(data)
+                {
+                    $('#load_more_cmt'+post_id).remove();
+                    // $('#new-cmt'+post_id).data('last_cmt')=
+                    $('#post-cmt'+post_id).append(data);
+
+                }
+            });
+        }
+
+        $(document).on('click', '.load_more_cmt', function(){
+            var id = $(this).data('id');
+            var post_id = $(this).data('post');
+            $(this).html('<b>Loading...</b>');
+            load_cmt(id,post_id, _token);
+        });
+
+        function changelike(user_id="",cmt_id="",_token) {
+            $.ajax({
+                url:"{{route('changelike')}}",
+                method:"POST",
+                data:{user_id:user_id,cmt_id: cmt_id,_token:_token},
+                success:function(data)
+                {
+                    $('#changelike'+cmt_id).html("");
+                    $('#changelike'+cmt_id).append(data);
+                    console.log(data);
+                }
+            });
+        }
+
+
+        $(document).on('click','.changelike',function () {
+            var user_id = $(this).data('like_user');
+            var cmt_id = $(this).data('like_cmt');
+            changelike(user_id,cmt_id,_token);
+
+        });
+
+
+        function cmt(post_id="",top_cmt="",content="",_token) {
+            $.ajax({
+                url:"{{route('comment')}}",
+                method:"POST",
+                data:{post_id:post_id,top_cmt: top_cmt,content:content,_token:_token},
+                success:function(data)
+                {
+                    $('.alert-cmt').remove();
+                    $('#addcmt'+post_id).val('');
+                    $('#load_more_cmt'+post_id).remove();
+                    $('#post-cmt'+post_id+' li:nth-child(2)').after(data);
+
+                }
+            });
+        }
+
+
+        $(document).on('click','.new-cmt',function () {
+
+            var post_id = $(this).data('p');
+            var top_cmt = $('#post-cmt'+post_id+' li:nth-child(3)').data('cmt');
+            var content = $('#addcmt'+post_id).val();
+            if($('#addcmt'+post_id).val().length == 0)
+            {
+                alert("Plz Enter comment!");
+                $('#addcmt'+post_id).after('<div class="alert alert-danger alert-cmt">\n' +
+                    '  <strong>!!!</strong> Plz Enter Comment!\n' +
+                    '</div>')
+
+            }
+            else {
+                cmt(post_id,top_cmt,content,_token);
+            }
+
+        });
+
+
+
+
+
+
+
+    });
+</script>
+
+</body>
 </html>
+
